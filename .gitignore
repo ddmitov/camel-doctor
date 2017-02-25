@@ -1,0 +1,14 @@
+archive/
+qt/
+logs/
+tmp/
+perl/bin/perl
+
+*.qm
+*.autosave
+Makefile
+cameldoc
+cameldoc.exe
+*.user
+gdrive
+upgit

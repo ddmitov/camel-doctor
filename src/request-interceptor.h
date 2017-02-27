@@ -10,8 +10,8 @@
  but WITHOUT ANY WARRANTY;
  without even the implied warranty of MERCHANTABILITY or
  FITNESS FOR A PARTICULAR PURPOSE.
- Dimitar D. Mitov, 2017
- Valcho Nedelchev, 2017
+ Dimitar D. Mitov, 2014 - 2017
+ Valcho Nedelchev, 2014 - 2017
  https://github.com/ddmitov/camel-doctor
 */
 

@@ -15,7 +15,10 @@
  https://github.com/ddmitov/camel-doctor
 */
 
+#include <iostream> // std::cout
+#ifndef Q_OS_WIN
 #include <unistd.h> // isatty();
+#endif
 
 #include <qglobal.h>
 #include <QApplication>
@@ -47,6 +50,33 @@ int main(int argc, char **argv)
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF8"));
 
     // ==============================
+    // Command-line arguments and help:
+    // ==============================
+    QStringList commandLine = QApplication::arguments();
+
+    // cameldoc --help
+    if (commandLine.size() == 2 and
+            commandLine.at(1).contains("--help")) {
+        std::cout << " " << std::endl;
+        std::cout << qApp->applicationName().toLatin1().constData()
+                  << " version "
+                  << qApp->applicationVersion().toLatin1().constData()
+                  << std::endl;
+        std::cout << "Executable: "
+                  << QApplication::applicationFilePath().toLatin1().constData()
+                  << std::endl;
+        std::cout << "Qt version: " << QT_VERSION_STR << std::endl;
+        std::cout << " " << std::endl;
+        std::cout << "Command-line usage:" << std::endl;
+        std::cout << "cameldoc script-full-path argument-1 argument-2"
+                  << std::endl;
+        std::cout << "cameldoc --help"
+                  << std::endl;
+        std::cout << " " << std::endl;
+        return 0;
+    }
+
+    // ==============================
     // Terminal detection:
     // ==============================
     // If Camel Doctor is started from terminal on a Unix-like operating system,
@@ -69,16 +99,26 @@ int main(int argc, char **argv)
             // Enter a new session:
             setsid();
 
+            // Original command-line arguments are
+            // transmitted to the detached copy of Camel Doctor.
+            // The first command-line argument is
+            // the Camel Doctor binary file path and it is removed.
+            // This is necessary for the QProcess invocation.
+            commandLine.removeFirst();
+
             // New instance is now detached from terminal:
             QProcess anotherInstance;
-            anotherInstance.startDetached(
-                        QApplication::applicationFilePath());
+            anotherInstance
+                    .startDetached(
+                        QApplication::applicationFilePath()
+                        .toLatin1().constData(),
+                        commandLine);
             if (anotherInstance.waitForStarted(-1)) {
-                return 1;
+                return 0;
             }
         } else {
             // The parent instance should be closed now:
-            return 1;
+            return 0;
         }
     }
 #endif
@@ -199,18 +239,28 @@ int main(int argc, char **argv)
         QObject::connect(debuggerHandler, SIGNAL(qDisplayOutputSignal(QString)),
                          &mainWindow, SLOT(qDisplayOutputSlot(QString)));
 
-        QFileSelector *fileSelector = new QFileSelector();
-        QString scriptToDebugFilePath = fileSelector->filePath;
+        if (commandLine.size() == 1) {
+            QFileSelector *fileSelector = new QFileSelector();
+            QString scriptToDebugFilePath = fileSelector->filePath;
 
-        if (scriptToDebugFilePath.length() > 1) {
-            QStringList commandLine;
-            commandLine.append(scriptToDebugFilePath);
-            debuggerHandler->qStartDebuggerSlot(commandLine);
+            if (scriptToDebugFilePath.length() > 1) {
+                QStringList commandLine;
+                commandLine.append(scriptToDebugFilePath);
+                debuggerHandler->qStartDebuggerSlot(commandLine);
+            }
+
+            if (scriptToDebugFilePath.length() <= 1) {
+                // qDebug() << "No file selected for debugging. Going to quit.";
+                return 0;
+            }
         }
 
-        if (scriptToDebugFilePath.length() <= 1) {
-            // qDebug() << "No file selected for debugging. Going to quit.";
-            return 0;
+        if (commandLine.size() > 1) {
+            // The first command-line argument is
+            // the Camel Doctor binary file path and it is removed.
+            commandLine.removeFirst();
+
+            debuggerHandler->qStartDebuggerSlot(commandLine);
         }
     }
 

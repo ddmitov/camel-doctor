@@ -174,6 +174,12 @@ $perl_debugger_output =~ s/, or \'man perldebug\' for more help//g;
 # Remove debugger command prompt line:
 $perl_debugger_output =~ s/\s{1,}DB\<\d{1,}\>\s//g;
 
+# Remove ASCII escape characters:
+$perl_debugger_output =~ s/\033//g;
+
+# Remove terminal characters:
+$perl_debugger_output =~ s/\[\d{1,2}m//g;
+
 # Escape any angled brackets from HTML tags so that
 # any HTML output from the debugger is not rendered;
 # sequence of substitute statements is important here:

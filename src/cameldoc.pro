@@ -124,7 +124,7 @@ equals (QT_MAJOR_VERSION, 5) {
     DESTDIR = $$PWD/../
 
     # Temporary folder:
-    MOC_DIR = tmp
-    OBJECTS_DIR = tmp
-    RCC_DIR = tmp
+    MOC_DIR = $$PWD/../tmp
+    OBJECTS_DIR = $$PWD/../tmp
+    RCC_DIR = $$PWD/../tmp
 }

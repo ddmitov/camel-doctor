@@ -68,7 +68,7 @@ int main(int argc, char **argv)
         std::cout << "Qt version: " << QT_VERSION_STR << std::endl;
         std::cout << " " << std::endl;
         std::cout << "Command-line usage:" << std::endl;
-        std::cout << "cameldoc script-full-path argument-1 argument-2"
+        std::cout << "cameldoc script argument-1 argument-2"
                   << std::endl;
         std::cout << "cameldoc --help"
                   << std::endl;
@@ -199,7 +199,7 @@ int main(int argc, char **argv)
     // ==============================
     if (perlInterpreter.length() == 0) {
         QFileReader *resourceReader =
-                new QFileReader(QString(":/html/error.html"));
+                new QFileReader(QString(":/error.html"));
         QString htmlErrorContents = resourceReader->fileContents;
 
         QString errorMessage = privatePerlInterpreterFullPath + "<br>"
@@ -210,6 +210,9 @@ int main(int argc, char **argv)
         mainWindow.viewWidget->setHtml(htmlErrorContents);
         mainWindow.showMaximized();
     }
+
+    bool scriptToDebugExists = true;
+    QString scriptToDebug;
 
     if (perlInterpreter.length() > 0) {
         // ==============================
@@ -241,15 +244,15 @@ int main(int argc, char **argv)
 
         if (commandLine.size() == 1) {
             QFileSelector *fileSelector = new QFileSelector();
-            QString scriptToDebugFilePath = fileSelector->filePath;
+            scriptToDebug = fileSelector->filePath;
 
-            if (scriptToDebugFilePath.length() > 1) {
+            if (scriptToDebug.length() > 1) {
                 QStringList commandLine;
-                commandLine.append(scriptToDebugFilePath);
+                commandLine.append(scriptToDebug);
                 debuggerHandler->qStartDebuggerSlot(commandLine);
             }
 
-            if (scriptToDebugFilePath.length() <= 1) {
+            if (scriptToDebug.length() <= 1) {
                 // qDebug() << "No file selected for debugging. Going to quit.";
                 return 0;
             }
@@ -260,8 +263,46 @@ int main(int argc, char **argv)
             // the Camel Doctor binary file path and it is removed.
             commandLine.removeFirst();
 
-            debuggerHandler->qStartDebuggerSlot(commandLine);
+            QStringList formattedCommandLine;
+
+            scriptToDebug = commandLine.first();
+            // Remove terminal characters:
+            scriptToDebug.replace(QRegExp("\\[\\d{1,2}m"), "");
+            // Remove ASCII escape characters:
+            scriptToDebug.replace(QRegExp("\\033"), "");
+
+            QDir scriptPath(scriptToDebug);
+            if (!scriptPath.isAbsolute()) {
+                scriptToDebug =
+                        QDir::currentPath() + QDir::separator() + scriptToDebug;
+            }
+
+            QFile scriptFile(scriptToDebug);
+            if (scriptFile.exists()) {
+                formattedCommandLine.append(scriptToDebug);
+                commandLine.removeFirst();
+
+                formattedCommandLine.append(commandLine);
+
+                debuggerHandler->qStartDebuggerSlot(formattedCommandLine);
+            }
+
+            if (!scriptFile.exists()) {
+                scriptToDebugExists = false;
+            }
         }
+    }
+
+    if (scriptToDebugExists == false) {
+        QFileReader *resourceReader =
+                new QFileReader(QString(":/error.html"));
+        QString htmlErrorContents = resourceReader->fileContents;
+
+        QString errorMessage = "File not found:<br>" + scriptToDebug;
+        htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
+
+        mainWindow.viewWidget->setHtml(htmlErrorContents);
+        mainWindow.showMaximized();
     }
 
     return application.exec();

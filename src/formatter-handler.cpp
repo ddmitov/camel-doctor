@@ -50,6 +50,9 @@ QFormatterHandler::QFormatterHandler(QByteArray postDataArray)
 
     formatterProcess.setProcessEnvironment(scriptEnvironment);
 
+    formatterProcess.setWorkingDirectory(
+                qApp->property("formatterScriptDir").toString());
+
     // Formatter script is read only once at application startup and
     // is executed as an oneliner for speed:
     formatterProcess.start(qApp->property("perlInterpreter").toString(),

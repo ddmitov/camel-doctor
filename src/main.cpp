@@ -167,11 +167,19 @@ int main(int argc, char **argv)
     application.setProperty("perlInterpreter", perlInterpreter);
 
     // ==============================
+    // Formatter script working directory:
+    // ==============================
+    QString formatterScriptDirectory =
+            binaryDirName + QDir::separator() +
+            "camel-doctor";
+
+    application.setProperty("formatterScriptDir", formatterScriptDirectory);
+
+    // ==============================
     // Formatter script:
     // ==============================
     QString formatterScriptFullPath =
-            binaryDirName + QDir::separator() +
-            "camel-doctor" + QDir::separator() +
+            formatterScriptDirectory + QDir::separator() +
             "camel-doctor.pl";
 
     application.setProperty("formatterScript", formatterScriptFullPath);

@@ -42,11 +42,8 @@ public slots:
                 page()->mainFrame()->hitTestContent(event->pos());
         QMenu menu;
 
-        if ((qWebHitTestResult.isContentEditable() and
-             qWebHitTestResult.linkUrl().isEmpty() and
-             qWebHitTestResult.imageUrl().isEmpty()) or
-                qWebHitTestResult.isContentSelected()) {
-
+        if (qWebHitTestResult.isContentEditable()) {
+            if (qWebHitTestResult.isContentSelected()) {
             QAction *cutAct = menu.addAction("Cut");
             QObject::connect(cutAct, SIGNAL(triggered()),
                              this, SLOT(qCutAction()));
@@ -62,16 +59,24 @@ public slots:
             QAction *selectAllAct = menu.addAction("Select All");
             QObject::connect(selectAllAct, SIGNAL(triggered()),
                              this, SLOT(qSelectAllAction()));
-        }
+            }
 
-        if (!qWebHitTestResult.isContentEditable() and
-                qWebHitTestResult.linkUrl().isEmpty() and
-                qWebHitTestResult.imageUrl().isEmpty() and
-                (!qWebHitTestResult.isContentSelected())) {
+            if (!qWebHitTestResult.isContentSelected()) {
+            QAction *pasteAct = menu.addAction("Paste");
+            QObject::connect(pasteAct, SIGNAL(triggered()),
+                             this, SLOT(qPasteAction()));
 
             QAction *selectAllAct = menu.addAction("Select All");
             QObject::connect(selectAllAct, SIGNAL(triggered()),
                              this, SLOT(qSelectAllAction()));
+            }
+        }
+
+        if (!qWebHitTestResult.isContentEditable() and
+                qWebHitTestResult.isContentSelected()) {
+            QAction *copyAct = menu.addAction("Copy");
+            QObject::connect(copyAct, SIGNAL(triggered()),
+                             this, SLOT(qCopyAction()));
         }
 
         menu.exec(mapToGlobal(event->pos()));

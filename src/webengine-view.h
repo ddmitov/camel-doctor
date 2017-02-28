@@ -48,28 +48,42 @@ public slots:
 
         QMenu menu;
 
-        if (contextMenuTest.selectedText().length() > 0) {
-            QAction *cutAct = menu.addAction("Cut");
-            QObject::connect(cutAct, SIGNAL(triggered()),
-                             this, SLOT(qCutAction()));
+        if (contextMenuTest.isContentEditable()) {
+            if (contextMenuTest.selectedText().length() == 0) {
+                QAction *pasteAct = menu.addAction("Paste");
+                QObject::connect(pasteAct, SIGNAL(triggered()),
+                                 this, SLOT(qPasteAction()));
 
-            QAction *copyAct = menu.addAction("Copy");
-            QObject::connect(copyAct, SIGNAL(triggered()),
-                             this, SLOT(qCopyAction()));
+                QAction *selectAllAct = menu.addAction("Select All");
+                QObject::connect(selectAllAct, SIGNAL(triggered()),
+                                 this, SLOT(qSelectAllAction()));
+            }
 
-            QAction *pasteAct = menu.addAction("Paste");
-            QObject::connect(pasteAct, SIGNAL(triggered()),
-                             this, SLOT(qPasteAction()));
+            if (contextMenuTest.selectedText().length() > 0) {
+                QAction *cutAct = menu.addAction("Cut");
+                QObject::connect(cutAct, SIGNAL(triggered()),
+                                 this, SLOT(qCutAction()));
 
-            QAction *selectAllAct = menu.addAction("Select All");
-            QObject::connect(selectAllAct, SIGNAL(triggered()),
-                             this, SLOT(qSelectAllAction()));
+                QAction *copyAct = menu.addAction("Copy");
+                QObject::connect(copyAct, SIGNAL(triggered()),
+                                 this, SLOT(qCopyAction()));
+
+                QAction *pasteAct = menu.addAction("Paste");
+                QObject::connect(pasteAct, SIGNAL(triggered()),
+                                 this, SLOT(qPasteAction()));
+
+                QAction *selectAllAct = menu.addAction("Select All");
+                QObject::connect(selectAllAct, SIGNAL(triggered()),
+                                 this, SLOT(qSelectAllAction()));
+            }
         }
 
-        if (contextMenuTest.selectedText().length() == 0) {
-            QAction *selectAllAct = menu.addAction("Select All");
-            QObject::connect(selectAllAct, SIGNAL(triggered()),
-                             this, SLOT(qSelectAllAction()));
+        if (!contextMenuTest.isContentEditable()) {
+            if (contextMenuTest.selectedText().length() > 0) {
+                QAction *copyAct = menu.addAction("Copy");
+                QObject::connect(copyAct, SIGNAL(triggered()),
+                                 this, SLOT(qCopyAction()));
+            }
         }
 
         menu.exec(mapToGlobal(event->pos()));

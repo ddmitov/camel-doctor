@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     // Basic application properties:
     // ==============================
     application.setApplicationName("Camel Doctor");
-    application.setApplicationVersion("0.1");
+    application.setApplicationVersion("0.1.0");
 
     // ==============================
     // UTF-8 encoding application-wide:
@@ -202,8 +202,6 @@ int main(int argc, char **argv)
     // MAIN WINDOW INITIALIZATION:
     // ==============================
     QMainBrowserWindow mainWindow;
-    mainWindow.viewWidget = new QViewWidget();
-    mainWindow.setCentralWidget(mainWindow.viewWidget);
     mainWindow.setWindowIcon(icon);
 
     QPage *mainPage = new QPage();

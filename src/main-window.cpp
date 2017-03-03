@@ -23,5 +23,6 @@
 QMainBrowserWindow::QMainBrowserWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    // !!! No need to implement code here, but must be declared !!!
+    viewWidget = new QViewWidget();
+    setCentralWidget(viewWidget);
 }

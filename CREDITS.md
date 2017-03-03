@@ -70,6 +70,7 @@ http://doc.qt.io/qt-5/qtglobal.html
 http://doc.qt.io/qt-5/qhash.html  
 http://doc.qt.io/qt-5/qhash-iterator.html  
 http://doc.qt.io/qt-5/qdesktopwidget.html  
+http://doc.qt.io/qt-5/qwebenginecontextmenudata.html  
 http://doc.qt.io/archives/qt-5.5/qwebview.html  
 http://doc.qt.io/archives/qt-5.5/qurlquery.html  
 

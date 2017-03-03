@@ -68,7 +68,7 @@ int main(int argc, char **argv)
         std::cout << "Qt version: " << QT_VERSION_STR << std::endl;
         std::cout << " " << std::endl;
         std::cout << "Command-line usage:" << std::endl;
-        std::cout << "cameldoc script argument-1 argument-2"
+        std::cout << "cameldoc script-pathname argument-1 argument-2"
                   << std::endl;
         std::cout << "cameldoc --help"
                   << std::endl;
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     // Terminal detection:
     // ==============================
     // If Camel Doctor is started from terminal on a Unix-like operating system,
-    // it will start another copy of itself and close the first one.
+    // it will start another detached copy of itself and close the first one.
     // This is necessary to capture the output from the Perl debugger.
 #ifndef Q_OS_WIN
     if (isatty(fileno(stdin))) {
@@ -182,7 +182,14 @@ int main(int argc, char **argv)
             formatterScriptDirectory + QDir::separator() +
             "camel-doctor.pl";
 
-    application.setProperty("formatterScript", formatterScriptFullPath);
+    // Formatter script is read only once at application startup,
+    // than it is stored as an application property in memory and
+    // is executed as an one-liner for speed:
+    QFileReader *formatterScriptReader =
+            new QFileReader(QString(formatterScriptFullPath));
+    QString formatterScriptContents = formatterScriptReader->fileContents;
+
+    application.setProperty("formatterScript", formatterScriptContents);
 
     // ==============================
     // Application icon:

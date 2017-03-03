@@ -53,10 +53,12 @@ QFormatterHandler::QFormatterHandler(QByteArray postDataArray)
     formatterProcess.setWorkingDirectory(
                 qApp->property("formatterScriptDir").toString());
 
-    // Formatter script is read only once at application startup and
-    // is executed as an oneliner for speed:
+    // Formatter script is read only once at application startup,
+    // than it is stored as an application property in memory and
+    // is executed as an one-liner for speed:
     formatterProcess.start(qApp->property("perlInterpreter").toString(),
                            QStringList()
+                           << "-e"
                            << qApp->property("formatterScript").toString(),
                            QProcess::Unbuffered | QProcess::ReadWrite);
 

@@ -12,6 +12,8 @@ Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and pr
 * [Compile-time Requirements](#compile-time-requirements)
 * [Runtime Requirements](#runtime-requirements)
 * [Macintosh Binary Type](#macintosh-binary-type)
+* [Command-Line Usage](#command-line-usage)
+* [GUI Usage](#gui-usage)
 * [Files and Folders](#files-and-folders)
 * [Windows Caveat](#windows-caveat)
 * [Special URLs](#special-urls)
@@ -48,13 +50,27 @@ Macintosh binary type is set in a compile-time variable located in the ``cameldo
   CONFIG += app_bundle
   ```
 
-## Files and Folders
-``{Camel_Doctor_binary_directory}/camel-doctor`` is home of the Perl debugger formatter script and the [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) module. This folder and all files inside it should not be removed or renamed for the proper operation of Camel Doctor.  
+## Command-Line Usage
 
-Camel Doctor expects to find Perl interpreter in ``{Camel_Doctor_binary_directory}/perl/bin`` folder. The interpreter must be named ``perl`` on Linux and Mac machines and ``perl.exe`` on Windows machines. If Perl interpreter is not found in the above location, Camel Doctor will try to find the first Perl interpreter on PATH. If no Perl interpreter is found, an error page is displayed.
+``cameldoc script-pathname argument-1 argument-2``  
+
+When started from the command line, Camel Doctor takes all the command-line arguments after the script pathname and passes them to the Perl debugger. All environment variables from the command-line shell (preset or manually added) are also inherited by the Perl debugger. These features are implemented for debugging of command-line Perl scripts and scripts requiring special environment variables.  
+
+If only relative pathname is supplied for the debugged script, it is converted to an absolute pathname using the working directory of Camel Doctor. If the supplied script pathname does not correspond to an existing file, an error page is displayed.  
+
+When Camel Doctor is started from terminal on a Unix-like operating system, it will start another detached copy of itself and close the first one. This is necessary to capture the output from the Perl debugger.
+
+## GUI Usage
+
+When Camel Doctor is started by double-clicking the compiled binary or a link to it, a file selection dialog is displayed prompting the user to select a Perl file for debugging. No command-line arguments can be supplied and no additional environment variables can be inserted in this scenario.
+
+## Files and Folders
+``{camel_doctor_binary_directory}/camel-doctor`` is home of the Perl debugger formatter script and the [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) module. This folder and all files inside it should not be removed or renamed for the proper operation of Camel Doctor.  
+
+Camel Doctor expects to find Perl interpreter in ``{camel_doctor_binary_directory}/perl/bin`` folder. The interpreter must be named ``perl`` on Linux and Mac machines and ``perl.exe`` on Windows machines. If Perl interpreter is not found in the above location, Camel Doctor will try to find the first Perl interpreter on PATH. If no Perl interpreter is found, an error page is displayed.
 
 ## Windows Caveat
-The [default Perl debugger](http://perldoc.perl.org/perldebug.html) can not work with Camel Doctor on Windows without a small, one-line modification, which makes the ``$console`` variable undefined. Tests proved that this minor change does not affect the normal operation of the debugger. This alteration is necessary because the ``Qprocess`` class, which is used to handle the Perl debugger, does not use any console from the underlying operating system. Without the modification the debugger is unable to find a console and hangs. You could easily patch your Windows version of ``perl5db.pl`` manually by replacing ``$console = "con";`` with ``undef $console;`` or by using ``{Camel_Doctor_binary_directory}/camel-doctor/perl5db-win32.patch``.  
+The [default Perl debugger](http://perldoc.perl.org/perldebug.html) can not work with Camel Doctor on Windows without a small, one-line modification, which makes the ``$console`` variable undefined. Tests proved that this minor change does not affect the normal operation of the debugger. Without the alteration the debugger is unable to find a console and hangs because the debugger handling ``Qprocess`` class does not use any console from the underlying operating system. You could easily patch your Windows version of ``perl5db.pl`` manually by replacing ``$console = "con";`` with ``undef $console;`` or by using ``{camel_doctor_binary_directory}/camel-doctor/perl5db-win32.patch``.  
 
 ## Special URLs
 * **Select file to debug:** ``http://local-pseudodomain/perl-debugger.function?action=select-file``
@@ -73,5 +89,5 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 ## Authors
-Dimitar D. Mitov, 2014 - 2017,  
-Valcho Nedelchev, 2014 - 2017.  
+Dimitar D. Mitov, 2014 - 2017  
+Valcho Nedelchev, 2014 - 2017  

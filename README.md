@@ -1,6 +1,10 @@
 Camel Doctor
 --------------------------------------------------------------------------------
 
+[![GitHub License](http://img.shields.io/badge/License-LGPL%20v3-blue.svg)](./LICENSE.md)
+[![Build Status](https://travis-ci.org/ddmitov/camel-doctor.svg?branch=master)](https://travis-ci.org/ddmitov/camel-doctor)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/ddmitov/camel-doctor?branch=master&svg=true)](https://ci.appveyor.com/project/ddmitov/camel-doctor)  
+
 Camel Doctor is an HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html). It is implemented as a C++ compiled executable based on [Qt 5](https://www.qt.io/) libraries. Any Perl script can be selected for debugging and the debugger output is displayed together with the syntax highlighted source code of the script and its modules.  
 
 Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) CPAN module by Hans Jeuken and Gábor Szabó.  

@@ -79,9 +79,9 @@ Camel Doctor expects to find Perl interpreter in ``{camel_doctor_binary_director
 The [default Perl debugger](http://perldoc.perl.org/perldebug.html) can not work with Camel Doctor on Windows without a small, one-line modification, which makes the ``$console`` variable undefined. Tests proved that this minor change does not affect the normal operation of the debugger. Without the alteration the debugger is unable to find a console and hangs because the debugger handling ``Qprocess`` class does not use any console from the underlying operating system. You could easily patch your Windows version of ``perl5db.pl`` manually by replacing ``$console = "con";`` with ``undef $console;`` or by using ``{camel_doctor_binary_directory}/camel-doctor/perl5db-win32.patch``.  
 
 ## Special URLs
-* **Select file to debug:** ``http://local-pseudodomain/perl-debugger.function?action=select-file``
+* **Select file to debug:** ``http://local-pseudodomain/perl-debugger?select-file``
 
-* **Send debugger command:** ``http://local-pseudodomain/perl-debugger.function?command=M``
+* **Send debugger command:** ``http://local-pseudodomain/perl-debugger?command=M``
 
 ## History
 Camel Doctor was started as a part of [Perl Executing Browser](https://www.github.com/ddmitov/perl-executing-browser) in 2014.

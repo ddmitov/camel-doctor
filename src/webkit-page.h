@@ -46,9 +46,9 @@ protected:
 
         if ((navigationType == QWebPage::NavigationTypeLinkClicked or
              navigationType == QWebPage::NavigationTypeFormSubmitted) and
-                request.url().fileName() == "perl-debugger.function") {
+                request.url().fileName() == "perl-debugger") {
 
-            if (request.url().toString().contains("action=select-file")) {
+            if (request.url().toString().contains("select-file")) {
                 emit startDebuggerSignal();
             }
 

@@ -27,8 +27,8 @@ void WebUrlRequestInterceptor::interceptRequest(
         QWebEngineUrlRequestInfo &info) {
     if (info.resourceType() ==
             QWebEngineUrlRequestInfo::ResourceTypeMainFrame and
-            info.requestUrl().fileName() == "perl-debugger.function") {
-        if (info.requestUrl().toString().contains("action=select-file")) {
+            info.requestUrl().fileName() == "perl-debugger") {
+        if (info.requestUrl().toString().contains("select-file")) {
             emit startDebuggerSignal();
         }
 

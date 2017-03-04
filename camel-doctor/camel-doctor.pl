@@ -19,37 +19,34 @@ my $html = "
 <html>
 
   <head>
-    <title>Perl Debugger GUI</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <meta charset='utf-8'>
 
     <style type='text/css'>
       body {
-        text-align: center;
-        font-family: sans-serif;
-        font-size: 14px;
-        color: #ffffff;
         background-color: #222222;
-        -webkit-text-size-adjust: 100%;
-        }
-      div.source {
+      }
+      div.container {
         width: 100%;
-        SOURCE_BOX_HEIGHT
-        overflow: auto;
       }
       ol {
+        SOURCE_BOX_HEIGHT
         text-align: left;
         font-family: monospace;
         font-size: 14px;
-        background-color: #FFFFFF;
+        overflow: auto;
+        text-indent: 1%;
         color: #000000;
+        background-color: #C0C0C0;
         -webkit-user-select: none;
         list-style-type: decimal;
-        background-color: #C0C0C0;
         padding-left: 6%;
-        text-indent: 1%;
-        margin: 4px 4px 4px 4px;
-        border: transparent 3px;
+        padding-right: 0%;
+        padding-top: 0%;
+        padding-bottom: 0%;
+        margin: 3px 3px 3px 3px;
+        border: transparent 0px;
+        border-radius: 3px;
       }
       li {
         background-color: #FFFFFF;
@@ -57,24 +54,10 @@ my $html = "
       div.line {
         -webkit-user-select: auto;
       }
-      input[type=text] {
-        font-family: sans-serif;
-        font-size: 14px;
-        appearance: none;
-        box-shadow: none;
-        display: block;
-        margin: 2px 2px 2px 2px;
-        border: 1px solid white;
-        width: 99%;
-        border-radius: 3px;
-        padding: 3px 3px 3px 3px;
-      }
-      input[type=text]:focus {
-        outline: none;
-      }
       div.btn-area {
-        text-align: left;
+        text-align: center;
         padding: 10px 0px 10px 0px;
+        margin: 3px 3px 3px 3px;
       }
       .btn {
         background: #3498db;
@@ -85,7 +68,6 @@ my $html = "
         font-family: sans-serif;
         font-size: 14px;
         text-decoration: none;
-        -webkit-border-radius: 3;
         border-radius: 3px;
         padding: 3px 5px 3px 5px;
       }
@@ -96,54 +78,79 @@ my $html = "
         background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
         text-decoration: none;
       }
+      form {
+        text-align: center;
+      }
+      input[type=text] {
+        text-align: center;
+        width: 33%;
+        font-family: sans-serif;
+        font-size: 14px;
+        appearance: none;
+        box-shadow: none;
+        padding: 3px 3px 3px 3px;
+        margin: 2px 2px 2px 2px;
+        border: 0px transparent;
+        border-radius: 3px;
+      }
+      input[type=text]:focus {
+        outline: none;
+      }
       div.debugger {
+        DEBUGGER_OUTPUT_BOX_HEIGHT
         text-align: left;
         font-family: monospace;
         font-size: 14px;
         color: #00FF00;
         background-color: #000000;
-        padding: 16px;
-        width: 99%;
-        DEBUGGER_OUTPUT_BOX_HEIGHT
         overflow: auto;
-        -webkit-border-radius: 3;
-        border-radius: 3px;
         padding: 3px 5px 3px 5px;
+        margin: 3px 3px 3px 3px;
+        border: transparent 0px;
+        border-radius: 3px;
       }
     </style>
   </head>
 
   <body>
-    <div class='source'>
+    <div class='container'>
       <ol>
 HIGHLIGHTED_SOURCE
       </ol>
-    </div>
-
-    <form action='http://local-pseudodomain/perl-debugger.function' method='get'>
-      <b>FILE_TO_HIGHLIGHT</b>
-      <input type='text' name='command' placeholder='Type Perl debugger command and press Enter' title='Debugger Command'>
 
       <div class='btn-area'>
-        <input type='submit' style='visibility: hidden; width: 0px; height: 0px; opacity: 0; border: none; padding: 0px;'>
-        <a href='http://local-pseudodomain/perl-debugger.function?action=select-file' class='btn' title='Select another file'>File</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=n' class='btn' title='Next line'>n</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=r' class='btn' title='Return from subroutine'>r</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=c' class='btn' title='Continue'>c</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=M' class='btn' title='List All Modules'>M</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=S' class='btn' title='List All Subroutine Names'>S</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=V' class='btn' title='List All Variables'>V</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=X' class='btn' title='List Variables in Current Package'>X</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=s' class='btn' title='Step Into...'>s</a>
-        <a href='http://local-pseudodomain/perl-debugger.function?command=R' class='btn' title='Restart debugger'>R</a>
-        &nbsp;
+        <a href='http://local-pseudodomain/perl-debugger?select-file'
+          class='btn' title='Select another file'>File</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=n'
+          class='btn' title='Next line'>n</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=r'
+          class='btn' title='Return from subroutine'>r</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=c'
+          class='btn' title='Continue'>c</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=M'
+          class='btn' title='List All Modules'>M</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=S'
+          class='btn' title='List All Subroutine Names'>S</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=V'
+          class='btn' title='List All Variables'>V</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=X'
+          class='btn' title='List Variables in Current Package'>X</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=s'
+          class='btn' title='Step Into...'>s</a>
+        <a href='http://local-pseudodomain/perl-debugger?command=R'
+          class='btn' title='Restart debugger'>R</a>
       </div>
-    </form>
 
-    <div class='debugger'>
+      <form action='http://local-pseudodomain/perl-debugger' method='get'>
+        <input type='text' name='command'
+          placeholder='Type Perl debugger command and press Enter'
+          title='Debugger Command'>
+      </form>
+
+      <div class='debugger'>
 DEBUGGER_OUTPUT
+      </div>
     </div>
-
   </body>
 
 </html>
@@ -170,13 +177,10 @@ $perl_debugger_output =~ s/\`/\'/g;
 $perl_debugger_output =~ s/Editor support available.(\n|(\r\n))//g;
 # 'man perldebug' is also not available within the Perl debugger GUI:
 $perl_debugger_output =~ s/, or \'man perldebug\' for more help//g;
-
 # Remove debugger command prompt line:
 $perl_debugger_output =~ s/\s{1,}DB\<\d{1,}\>\s//g;
-
 # Remove ASCII escape characters:
 $perl_debugger_output =~ s/\033//g;
-
 # Remove terminal characters:
 $perl_debugger_output =~ s/\[\d{1,2}m//g;
 
@@ -187,17 +191,20 @@ $perl_debugger_output =~ s/\</&lt;/g;
 $perl_debugger_output =~ s/\</&gt;/g;
 # Replace any tabs with spaces:
 $perl_debugger_output =~ s/\t/ /g;
-# Replace three or more newline characters with two newline characters and HTML <br> tags;
+# Replace three or more newline characters with
+# two newline characters and HTML <br> tags;
 # sequence of substitute statements is important here too:
 $perl_debugger_output =~ s/\n{3,}/\n<br>\n<br>/g;
-# Replace any still not replaced newline characters with a newline character and an HTML <br> tag.
+# Replace any still not replaced newline characters with
+# a newline character and an HTML <br> tag.
 $perl_debugger_output =~ s/\n/\n<br>/g;
 # Replace two spaces with two HTML whitespace entities:
 $perl_debugger_output =~ s/  /\&nbsp\;\&nbsp\;/g;
 
-my $file_to_highlight;
+my $file_to_highlight = "";
 my $line_to_underline;
-if (defined $lineinfo and $perl_debugger_output !~ "Debugged program terminated" ) {
+if (defined $lineinfo and
+  $perl_debugger_output !~ "Debugged program terminated") {
   chomp $lineinfo;
   $lineinfo =~ s/^.*[\(\[]//g;
   $lineinfo =~ s/[\)\]].*//g;
@@ -216,8 +223,9 @@ if (defined $lineinfo and $perl_debugger_output !~ "Debugged program terminated"
 ##############################
 # SYNTAX HIGHLIGHTING:
 ##############################
-my $formatted_perl_source_code;
-if (defined $lineinfo and $perl_debugger_output !~ "Debugged program terminated" ) {
+my $formatted_perl_source_code = "";
+if (defined $lineinfo and
+  $perl_debugger_output !~ "Debugged program terminated") {
   # Open the file to highlight read-only:
   my $file_to_highlight_filehandle;
   open ($file_to_highlight_filehandle, "<", "$file_to_highlight");
@@ -239,18 +247,22 @@ if (defined $lineinfo and $perl_debugger_output !~ "Debugged program terminated"
 
     if ($line_number >= $start_line and $line_number <= $end_line) {
       my $source_code_language = "Perl";
-      my $source_code_highlighter = source_code_highlighter($source_code_language);
-      my $highlighted_line = $source_code_highlighter->highlightText ($source_to_highlight_line);
+      my $source_code_highlighter =
+        source_code_highlighter($source_code_language);
+      my $highlighted_line =
+        $source_code_highlighter->highlightText ($source_to_highlight_line);
 
       my $formatted_perl_source_line;
       if ($line_number eq $line_to_underline) {
         $formatted_perl_source_line =
           "<li style='background-color: #CCCCCC;' value='${line_number}'><div class='line'>${highlighted_line}</div></li>\n";
-        $formatted_perl_source_code = $formatted_perl_source_code.$formatted_perl_source_line;
+        $formatted_perl_source_code =
+          $formatted_perl_source_code.$formatted_perl_source_line;
       } else {
         $formatted_perl_source_line =
           "<li value='${line_number}'></a><div class='line'>${highlighted_line}</div></li>\n";
-        $formatted_perl_source_code = $formatted_perl_source_code.$formatted_perl_source_line;
+        $formatted_perl_source_code =
+          $formatted_perl_source_code.$formatted_perl_source_line;
       }
     }
   }
@@ -261,8 +273,8 @@ if (defined $lineinfo and $perl_debugger_output !~ "Debugged program terminated"
 ##############################
 my $source_box_height;
 my $debugger_output_box_height;
-if (defined $lineinfo and $perl_debugger_output !~ "Debugged program terminated") {
-  $html =~ s/FILE_TO_HIGHLIGHT/$file_to_highlight/;
+if (defined $lineinfo or
+  $perl_debugger_output !~ "Debugged program terminated") {
   $html =~ s/HIGHLIGHTED_SOURCE/$formatted_perl_source_code/;
   $source_box_height = "height: 42%;";
   $html =~ s/SOURCE_BOX_HEIGHT/$source_box_height/;
@@ -275,7 +287,6 @@ if (defined $lineinfo and $perl_debugger_output !~ "Debugged program terminated"
   $debugger_output_box_height = "height: 75%;";
   $html =~ s/DEBUGGER_OUTPUT_BOX_HEIGHT/$debugger_output_box_height/;
   $html =~ s/DEBUGGER_OUTPUT/$perl_debugger_output/;
-  $html =~ s/FILE_TO_HIGHLIGHT//;
   $html =~ s/HIGHLIGHTED_SOURCE//;
 }
 

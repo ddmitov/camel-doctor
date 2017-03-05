@@ -26,9 +26,6 @@ my $html = "
       body {
         background-color: #222222;
       }
-      div.container {
-        width: 100%;
-      }
       ol {
         SOURCE_BOX_HEIGHT
         text-align: left;
@@ -55,9 +52,12 @@ my $html = "
         -webkit-user-select: auto;
       }
       div.btn-area {
-        text-align: center;
+        text-align: left;
         padding: 10px 0px 10px 0px;
-        margin: 3px 3px 3px 3px;
+        margin-left: 3px;
+        margin-right: 3px;
+        margin-top: 0px;
+        margin-bottom: 1px;
       }
       .btn {
         background: #3498db;
@@ -78,18 +78,17 @@ my $html = "
         background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
         text-decoration: none;
       }
-      form {
-        text-align: center;
-      }
       input[type=text] {
-        text-align: center;
-        width: 33%;
+        width: 99%;
         font-family: sans-serif;
         font-size: 14px;
         appearance: none;
         box-shadow: none;
         padding: 3px 3px 3px 3px;
-        margin: 2px 2px 2px 2px;
+        margin-left: 3px;
+        margin-right: 3px;
+        margin-top: 2px;
+        margin-bottom: 4px;
         border: 0px transparent;
         border-radius: 3px;
       }
@@ -104,8 +103,11 @@ my $html = "
         color: #00FF00;
         background-color: #000000;
         overflow: auto;
-        padding: 3px 5px 3px 5px;
-        margin: 3px 3px 3px 3px;
+        padding: 3px 3px 3px 3px;
+        margin-left: 3px;
+        margin-right: 3px;
+        margin-top: 4px;
+        margin-bottom: 0px;
         border: transparent 0px;
         border-radius: 3px;
       }
@@ -113,43 +115,41 @@ my $html = "
   </head>
 
   <body>
-    <div class='container'>
-      <ol>
+    <ol>
 HIGHLIGHTED_SOURCE
-      </ol>
+    </ol>
 
-      <div class='btn-area'>
-        <a href='http://local-pseudodomain/perl-debugger?select-file'
-          class='btn' title='Select another file'>File</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=n'
-          class='btn' title='Next line'>n</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=r'
-          class='btn' title='Return from subroutine'>r</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=c'
-          class='btn' title='Continue'>c</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=M'
-          class='btn' title='List All Modules'>M</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=S'
-          class='btn' title='List All Subroutine Names'>S</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=V'
-          class='btn' title='List All Variables'>V</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=X'
-          class='btn' title='List Variables in Current Package'>X</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=s'
-          class='btn' title='Step Into...'>s</a>
-        <a href='http://local-pseudodomain/perl-debugger?command=R'
-          class='btn' title='Restart debugger'>R</a>
-      </div>
+    <div class='btn-area'>
+      <a href='http://local-pseudodomain/perl-debugger?select-file'
+        class='btn' title='Select another file'>File</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=n'
+        class='btn' title='Next line'>n</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=r'
+        class='btn' title='Return from subroutine'>r</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=c'
+        class='btn' title='Continue'>c</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=M'
+        class='btn' title='List All Modules'>M</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=S'
+        class='btn' title='List All Subroutine Names'>S</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=V'
+        class='btn' title='List All Variables'>V</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=X'
+        class='btn' title='List Variables in Current Package'>X</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=s'
+        class='btn' title='Step Into...'>s</a>
+      <a href='http://local-pseudodomain/perl-debugger?command=R'
+        class='btn' title='Restart debugger'>R</a>
+    </div>
 
-      <form action='http://local-pseudodomain/perl-debugger' method='get'>
-        <input type='text' name='command'
-          placeholder='Type Perl debugger command and press Enter'
-          title='Debugger Command'>
-      </form>
+    <form action='http://local-pseudodomain/perl-debugger' method='get'>
+      <input type='text' name='command'
+        placeholder='Type Perl debugger command and press Enter'
+        title='Debugger Command'>
+    </form>
 
-      <div class='debugger'>
+    <div class='debugger'>
 DEBUGGER_OUTPUT
-      </div>
     </div>
   </body>
 

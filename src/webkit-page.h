@@ -18,13 +18,15 @@
 #ifndef PAGE_H
 #define PAGE_H
 
+#include <QApplication>
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QWebPage>
 #include <QWebFrame>
 
 // ==============================
-// LOCAL PAGE CLASS CONSTRUCTOR:
+// LOCAL PAGE CLASS DEFINITION:
+// (QTWEBKIT VERSION)
 // ==============================
 class QPage : public QWebPage
 {
@@ -53,7 +55,11 @@ protected:
             }
 
             if (request.url().toString().contains("command=")) {
-                emit sendCommandToDebuggerSignal(request.url());
+                if (request.url().toString().contains("command=q")) {
+                    qApp->exit();
+                } else {
+                    emit sendCommandToDebuggerSignal(request.url());
+                }
             }
         }
 

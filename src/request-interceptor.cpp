@@ -15,8 +15,13 @@
  https://github.com/ddmitov/camel-doctor
 */
 
+#include <QApplication>
+
 #include <request-interceptor.h>
 
+// ==============================
+// REQUEST INTERCEPTOR CLASS CONSTRUCTOR:
+// ==============================
 WebUrlRequestInterceptor::WebUrlRequestInterceptor(QObject *page)
   :QWebEngineUrlRequestInterceptor(page)
 {
@@ -33,7 +38,11 @@ void WebUrlRequestInterceptor::interceptRequest(
         }
 
         if (info.requestUrl().toString().contains("command=")) {
-            emit sendCommandToDebuggerSignal(info.requestUrl());
+            if (info.requestUrl().toString().contains("command=q")) {
+                qApp->exit();
+            } else {
+                emit sendCommandToDebuggerSignal(info.requestUrl());
+            }
         }
     }
 }

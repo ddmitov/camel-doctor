@@ -25,7 +25,8 @@
 #include "request-interceptor.h"
 
 // ==============================
-// LOCAL PAGE CLASS CONSTRUCTOR:
+// LOCAL PAGE CLASS DEFINITION:
+// (QTWEBENGINE VERSION)
 // ==============================
 class QPage : public QWebEnginePage
 {

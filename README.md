@@ -7,7 +7,7 @@ Camel Doctor
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/ddmitov/camel-doctor?branch=master&svg=true)](https://ci.appveyor.com/project/ddmitov/camel-doctor)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/11917/badge.svg)](https://scan.coverity.com/projects/ddmitov-camel-doctor)  
 
-Camel Doctor is an HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html). It is implemented as a C++ compiled executable based on [Qt 5](https://www.qt.io/) libraries. Any Perl script can be selected for debugging and the debugger output is displayed together with the syntax highlighted source code of the script and its modules.  
+Camel Doctor is a serverless HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html). It is implemented as a C++ [Qt 5](https://www.qt.io/) desktop executable. The debugger output is displayed together with the syntax highlighted source code of the selected script and its modules.  
 
 Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) CPAN module by Hans Jeuken and Gábor Szabó.  
 Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and provoked by the scarcity of graphical frontends for the Perl debugger.  
@@ -29,7 +29,9 @@ Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and pr
 
 ## Compile-time Requirements
 * GCC compiler
-* Qt 5 headers and libraries.
+* Qt 5 headers and libraries.  
+  ``QtWebKit`` is used with all Qt versions up to Qt 5.5.  
+  ``QtWebEngine`` is used with all Qt versions starting from Qt 5.6.
 
 Compiled and tested successfully using:
 * [Qt Creator 3.5.1 and Qt 5.5.1](http://download.qt.io/official_releases/qt/5.5/5.5.1/) on 64-bit Lubuntu 16.04 Linux

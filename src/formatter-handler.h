@@ -25,7 +25,7 @@
 // #include <QDebug>
 
 // ==============================
-// FORMATTER HANDLER:
+// FORMATTER HANDLER DEFINITION:
 // ==============================
 class QFormatterHandler : public QObject
 {

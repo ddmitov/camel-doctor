@@ -33,7 +33,7 @@
 #include <file-selector.h>
 
 // ==============================
-// PERL DEBUGGER HANDLER CONSTRUCTOR:
+// PERL DEBUGGER HANDLER DEFINITION:
 // Implementation of an idea proposed by Valcho Nedelchev
 // ==============================
 class QPerlDebuggerHandler : public QObject

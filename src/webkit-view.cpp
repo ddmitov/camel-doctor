@@ -19,6 +19,7 @@
 
 // ==============================
 // VIEW CLASS CONSTRUCTOR:
+// (QTWEBKIT VERSION)
 // ==============================
 QViewWidget::QViewWidget()
     : QWebView(0)

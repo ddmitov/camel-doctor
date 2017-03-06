@@ -19,6 +19,9 @@
 
 #include <debugger-handler.h>
 
+// ==============================
+// REQUEST INTERCEPTOR CLASS DEFINITION:
+// ==============================
 class WebUrlRequestInterceptor : public QWebEngineUrlRequestInterceptor
 {
     Q_OBJECT

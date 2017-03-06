@@ -28,6 +28,7 @@
 
 // ==============================
 // LOCAL VIEW CLASS DEFINITION:
+// (QTWEBENGINE VERSION)
 // ==============================
 class QViewWidget : public QWebEngineView
 {

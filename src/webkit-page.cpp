@@ -19,6 +19,7 @@
 
 // ==============================
 // LOCAL PAGE CLASS CONSTRUCTOR:
+// (QTWEBKIT VERSION)
 // ==============================
 QPage::QPage()
     : QWebPage(0)

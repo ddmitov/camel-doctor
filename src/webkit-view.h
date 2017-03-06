@@ -27,6 +27,7 @@
 
 // ==============================
 // LOCAL VIEW CLASS DEFINITION:
+// (QTWEBKIT VERSION)
 // ==============================
 class QViewWidget : public QWebView
 {

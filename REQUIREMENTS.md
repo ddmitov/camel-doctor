@@ -1,10 +1,8 @@
 ## Compile-time Requirements
 * GCC compiler
-* Qt 5 headers and libraries.
-
-Compiled and tested successfully using:
-* [Qt Creator 3.5.1 and Qt 5.5.1](http://download.qt.io/official_releases/qt/5.5/5.5.1/) on 64-bit Lubuntu 16.04 Linux
-* [Qt Creator 4.2.1 and Qt 5.8.0](http://download.qt.io/official_releases/qt/5.8/5.8.0/) on 64-bit Lubuntu 16.04 Linux
+* Qt 5 headers and libraries.  
+  ``QtWebKit`` is used with all Qt versions up to Qt 5.5.  
+  ``QtWebEngine`` is used with all Qt versions starting from Qt 5.6.
 
 ## Runtime Requirements
 * Qt 5 libraries

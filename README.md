@@ -70,7 +70,7 @@ When Camel Doctor is started from terminal on a Unix-like operating system, it w
 
 ## GUI Usage
 
-When Camel Doctor is started by double-clicking the compiled binary or a link to it, a file selection dialog is displayed prompting the user to select a Perl file for debugging. No command-line arguments can be supplied and no additional environment variables can be inserted in this scenario.
+When Camel Doctor is started by double-clicking the binary, a file selection dialog is displayed, but no command-line arguments can be supplied and no additional environment variables can be inserted.
 
 ## Files and Folders
 ``{camel_doctor_binary_directory}/resources`` is home of all Camel Doctor support scripts and the [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) module. This folder and all files inside it should not be removed or renamed for the proper operation of Camel Doctor.  

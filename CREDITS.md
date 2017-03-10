@@ -24,10 +24,8 @@ https://metacpan.org/release/Syntax-Highlight-Engine-Kate
 https://gitorious.org/qt-examples/qt-examples/source/sitespecificbrowser (defunct)  
 https://github.com/richmoore/qt-examples/tree/master/sitespecificbrowser  
 
-https://github.com/richmoore/qt-examples/tree/master/sitespecificbrowser  
 https://github.com/rsdn/avalon/blob/master/web_view.cpp  
 https://github.com/ariya/phantomjs/blob/master/src/qt/src/3rdparty/webkit/Source/WebKit/qt/Api/qwebpage.cpp  
-https://github.com/humantech/webkit-scheme-qt5.1  
 
 http://qt-project.org/doc/qt-4.8/qwebhistory.html  
 http://qt-project.org/doc/qt-4.8/qdir.html  
@@ -47,7 +45,6 @@ http://qt-project.org/doc/qt-5.0/qtcore/qfile.html
 http://qt-project.org/doc/qt-5.0/qtwidgets/qapplication.html  
 http://qt-project.org/doc/qt-5.0/qtgui/qguiapplication.html  
 http://qt-project.org/doc/qt-5/qtnetwork-module.html  
-http://qt-project.org/doc/qt-5/qwebframe.html  
 http://qt-project.org/doc/qt-5/qmake-test-function-reference.html  
 
 http://qt-project.org/wiki/Qt_for_beginners_Signals_and_slots_2  
@@ -57,20 +54,18 @@ http://qt-project.org/forums/viewthread/4433 (Convert QString into QByteArray as
 http://qt-project.org/forums/viewthread/25533 (#ifdef condition)  
 
 http://doc.qt.digia.com/qtcreator-extending/coding-style.html  
-http://doc.qt.digia.com/4.6/internationalization.html  
 
 https://doc.qt.io/archives/4.6/webkit-fancybrowser-mainwindow-cpp.html  
 http://doc.qt.io/qt-4.8/qmake-advanced-usage.html  
-http://doc.qt.io/qt-4.8/qwebframe.html  
 http://doc.qt.io/qt-4.8/signalsandslots.html  
 http://doc.qt.io/qt-4.8/qfileinfo.html  
 http://doc.qt.io/qt-4.8/qwebinspector.html  
 http://doc.qt.io/qt-4.8/qinputdialog.html  
 http://doc.qt.io/qt-5/qtglobal.html  
-http://doc.qt.io/qt-5/qhash.html  
-http://doc.qt.io/qt-5/qhash-iterator.html  
 http://doc.qt.io/qt-5/qdesktopwidget.html  
 http://doc.qt.io/qt-5/qwebenginecontextmenudata.html  
+http://doc.qt.io/qt-5/qtemporarydir.html  
+
 http://doc.qt.io/archives/qt-5.5/qwebview.html  
 http://doc.qt.io/archives/qt-5.5/qurlquery.html  
 
@@ -94,29 +89,22 @@ http://harmattan-dev.nokia.com/docs/library/html/qt4/qdir.html (defunct)
 http://harmattan-dev.nokia.com/docs/library/html/qt4/qtglobal.html (defunct)  
 http://harmattan-dev.nokia.com/docs/library/html/qtwebkit/qwebpage.html (defunct)  
 
-http://stackoverflow.com/questions/14987007/what-is-the-expected-encoding-for-qwebviewsethtml  
-http://stackoverflow.com/questions/10666998/qwebkit-display-local-webpage  
 http://stackoverflow.com/questions/7402576/how-to-get-current-working-directory-in-a-qt-application  
 http://stackoverflow.com/questions/8026101/correct-way-to-quit-a-qt-program  
 http://stackoverflow.com/questions/2029272/how-to-declare-a-global-variable-that-could-be-used-in-the-entire-program  
-http://stackoverflow.com/questions/12571895/save-open-dialog-localization-in-qt  
 http://stackoverflow.com/questions/3518090/how-to-get-the-query-string-from-a-qurl  
-http://stackoverflow.com/questions/3211771/how-to-convert-int-to-qstring  
 
 http://stackoverflow.com/questions/9101887/how-to-validate-email-address-using-qregexp  
-http://stackoverflow.com/questions/13856734/open-qfile-for-appending  
 http://stackoverflow.com/questions/1312922/detect-if-stdin-is-a-terminal-or-pipe-in-c-c-qt  
 http://stackoverflow.com/questions/5156675/how-to-use-isatty-on-cout-or-can-i-assume-that-cout-file-descriptor-1  
 http://stackoverflow.com/questions/12301484/how-to-treat-a-qstring-as-a-file-location-and-get-its-directory  
 http://stackoverflow.com/questions/3348711/add-a-define-to-qmake-with-a-value  
-http://stackoverflow.com/questions/17998811/window-modal-qfiledialog-pushing-parent-to-background-after-exec  
 http://stackoverflow.com/questions/2580934/how-to-specify-different-debug-release-output-directories-in-qmake-pro-file  
 http://stackoverflow.com/questions/3348711/add-a-define-to-qmake-with-a-value  
 http://stackoverflow.com/questions/4515602/how-to-get-executable-name-in-qt  
 http://stackoverflow.com/questions/2781119/how-to-get-the-current-timestamp-in-qt  
 http://stackoverflow.com/questions/25254043/is-it-possible-to-compare-ifdef-values-for-conditional-use  
 http://stackoverflow.com/questions/10701504/command-working-in-terminal-but-not-via-qprocess  
-http://stackoverflow.com/questions/17680207/qhash-iterator-example-no-match-for-operator  
 
 http://www.codeprogress.com/cpp/libraries/qt/showQtExample.php?index=176&key=QStringtoQStringList  
 http://www.codeprogress.com/cpp/libraries/qt/showQtExample.php?index=598&key=QWebViewCustomContextMenu  
@@ -133,19 +121,21 @@ http://www.opensource.apple.com/source/WebKit/WebKit-6531.9/qt/Api/qwebpage.cpp
 http://lemirep.wordpress.com/2013/06/01/deploying-qt-applications-on-linux-and-windows-3/  
 
 ## Perl 5
+http://perldoc.perl.org/perldebug.html  
+
 http://stackoverflow.com/questions/1725097/how-can-i-disable-terminal-polling-for-cpan-used-from-crontab  
 http://stackoverflow.com/questions/4510550/using-perl-how-do-i-decode-or-create-those-encodings-on-the-web  
 http://stackoverflow.com/questions/15210532/use-utf8-gives-me-wide-character-in-print  
 http://stackoverflow.com/questions/787899/how-do-i-use-a-perl-module-from-a-relative-location  
 
-http://perlmaven.com/manipulating-perl-arrays  
+https://perlmaven.com/manipulating-perl-arrays  
 https://perlmaven.com/the-most-important-file-system-tools  
+https://perlmaven.com/slurp  
 
 http://www.comp.leeds.ac.uk/cgi-bin/Perl/displaytext/cgi-bin/read-input  
 
 ## HTML, CSS & JavaScript
 http://stackoverflow.com/questions/4622086/widthauto-for-input-fields  
-http://stackoverflow.com/questions/248011/how-do-i-wrap-text-in-a-pre-tag  
 
 http://css3buttongenerator.com/  
 http://callmenick.com/post/various-css-input-text-styles  

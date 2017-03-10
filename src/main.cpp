@@ -24,8 +24,9 @@
 #include <QApplication>
 #include <QTextCodec>
 
-// #include <QDateTime>
-// #include <QDebug>
+#ifdef Q_OS_WIN
+#include <QTemporaryDir>
+#endif
 
 #include "main-window.h"
 #include "debugger-handler.h"
@@ -151,11 +152,9 @@ int main(int argc, char **argv)
 #endif
 
     QString perlInterpreter;
-    QString privatePerlInterpreterFullPath = QDir::toNativeSeparators(
-                binaryDirName + QDir::separator()
-                + "perl" + QDir::separator()
-                + "bin" + QDir::separator()
-                + perlExecutable);
+    QString privatePerlInterpreterFullPath =
+            QDir::toNativeSeparators(
+                binaryDirName + "/perl/bin/" + perlExecutable);
 
     QFile privatePerlInterpreterFile(privatePerlInterpreterFullPath);
     if (!privatePerlInterpreterFile.exists()) {
@@ -167,26 +166,56 @@ int main(int argc, char **argv)
     application.setProperty("perlInterpreter", perlInterpreter);
 
     // ==============================
-    // Formatter script working directory:
+    // Resources directory:
     // ==============================
-    QString formatterScriptDirectory =
-            binaryDirName + QDir::separator() +
-            "camel-doctor";
+    QString reourcesDirectory =
+            QDir::toNativeSeparators(binaryDirName + "/resources");
 
-    application.setProperty("formatterScriptDir", formatterScriptDirectory);
+    application.setProperty("reourcesDirectory", reourcesDirectory);
+
+#ifdef Q_OS_WIN
+    // ==============================
+    // Modified Perl debugger:
+    // ==============================
+    QString debuggerLoaderPath;
+    QTemporaryDir tempDirectory;
+    QString modifiedDebuggerPath;
+
+    if (tempDirectory.isValid()) {
+        debuggerLoaderPath =
+                QDir::toNativeSeparators(reourcesDirectory + "/dbgloader.pl");
+
+        modifiedDebuggerPath =
+                QDir::toNativeSeparators(tempDirectory.path() + "/perl5db.pl");
+
+        QProcess perlDebuggerLoader;
+        perlDebuggerLoader.start(perlInterpreter,
+                                 QStringList()
+                                 << debuggerLoaderPath
+                                 << modifiedDebuggerPath);
+
+        modifiedDebuggerPath.replace("\\", "\\\\");
+
+        if (perlDebuggerLoader.waitForFinished()) {
+            qputenv ("PERL5DB",
+                     "BEGIN {require \"" +
+                     modifiedDebuggerPath.toLatin1() +
+                     "\"}");
+        }
+    }
+#endif
 
     // ==============================
     // Formatter script:
     // ==============================
-    QString formatterScriptFullPath =
-            formatterScriptDirectory + QDir::separator() +
-            "camel-doctor.pl";
-
     // Formatter script is read only once at application startup,
     // than it is stored as an application property in memory and
     // is executed as an one-liner for speed:
-    QFileReader *formatterScriptReader =
-            new QFileReader(QString(formatterScriptFullPath));
+    QString debuggerFormatterPath =
+            QDir::toNativeSeparators(
+                reourcesDirectory + "/dbgformatter.pl");
+
+    QFileReader *formatterScriptReader = new QFileReader(debuggerFormatterPath);
     QString formatterScriptContents = formatterScriptReader->fileContents;
 
     application.setProperty("formatterScript", formatterScriptContents);
@@ -229,17 +258,6 @@ int main(int argc, char **argv)
 
     if (perlInterpreter.length() > 0) {
         // ==============================
-        // Basic program information:
-        // ==============================
-        // qDebug() << application.applicationName().toLatin1().constData()
-        //          << application.applicationVersion().toLatin1().constData()
-        //          << "started.";
-        // qDebug() << "Qt version:" << QT_VERSION_STR;
-        // qDebug() << "Executable:" << application.applicationFilePath();
-        // qDebug() << "PID:" << application.applicationPid();
-        // qDebug() << "Perl interpreter:" << perlInterpreterFullPath;
-
-        // ==============================
         // Perl debugger handler initialization:
         // ==============================
         QPerlDebuggerHandler *debuggerHandler = new QPerlDebuggerHandler();
@@ -266,7 +284,6 @@ int main(int argc, char **argv)
             }
 
             if (scriptToDebug.length() <= 1) {
-                // qDebug() << "No file selected for debugging. Going to quit.";
                 return 0;
             }
         }
@@ -287,7 +304,10 @@ int main(int argc, char **argv)
             QDir scriptPath(scriptToDebug);
             if (!scriptPath.isAbsolute()) {
                 scriptToDebug =
-                        QDir::currentPath() + QDir::separator() + scriptToDebug;
+                        QDir::toNativeSeparators(
+                            QDir::currentPath() +
+                            QDir::separator() +
+                            scriptToDebug);
             }
 
             QFile scriptFile(scriptToDebug);

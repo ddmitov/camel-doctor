@@ -7,7 +7,7 @@ Camel Doctor
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/ddmitov/camel-doctor?branch=master&svg=true)](https://ci.appveyor.com/project/ddmitov/camel-doctor)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/11917/badge.svg)](https://scan.coverity.com/projects/ddmitov-camel-doctor)  
 
-Camel Doctor is a serverless HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html). It is implemented as a C++ [Qt 5](https://www.qt.io/) desktop executable. The debugger output is displayed together with the syntax highlighted source code of the selected script and its modules.  
+Camel Doctor is a serverless HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html) in the form of a C++ [Qt 5](https://www.qt.io/) desktop application. The debugger output is displayed together with the syntax highlighted source code of the selected script and its modules.  
 
 Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) CPAN module by Hans Jeuken and Gábor Szabó.  
 Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and provoked by the scarcity of graphical frontends for the Perl debugger.  
@@ -21,7 +21,7 @@ Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and pr
 * [Command-Line Usage](#command-line-usage)
 * [GUI Usage](#gui-usage)
 * [Files and Folders](#files-and-folders)
-* [Windows Caveat](#windows-caveat)
+* [Windows Note](#windows-note)
 * [Special URLs](#special-urls)
 * [History](#history)
 * [License](#license)
@@ -77,8 +77,10 @@ When Camel Doctor is started by double-clicking the compiled binary or a link to
 
 Camel Doctor expects to find Perl interpreter in ``{camel_doctor_binary_directory}/perl/bin`` folder. The interpreter must be named ``perl`` on Linux and Mac machines and ``perl.exe`` on Windows machines. If Perl interpreter is not found in the above location, Camel Doctor will try to find the first Perl interpreter on PATH. If no Perl interpreter is found, an error page is displayed.
 
-## Windows Caveat
-The [default Perl debugger](http://perldoc.perl.org/perldebug.html) can not work with Camel Doctor on Windows without a small, one-line modification, which makes the ``$console`` variable undefined. Tests proved that this minor change does not affect the normal operation of the debugger. Without the alteration the debugger is unable to find a console and hangs because the debugger handling ``Qprocess`` class does not use any console from the underlying operating system. You could easily patch your Windows version of ``perl5db.pl`` manually by replacing ``$console = "con";`` with ``undef $console;`` or by using ``{camel_doctor_binary_directory}/camel-doctor/perl5db-win32.patch``.  
+## Windows Note
+Windows versions of ``perl5db.pl`` can not work with Camel Doctor without a small, one-line modification, which makes the ``$console`` variable undefined - ``$console = "con"`` must be replaced by ``undef $console``. Tests proved that this minor change does not affect the normal operation of the debugger. Without the alteration the debugger is unable to find a console and hangs because the debugger handling ``Qprocess`` class does not use any console from the underlying operating system.  
+
+A patched copy of the debugger placed in a temporary folder is used by Camel Doctor on Windows to avoid manually editing the Perl debugger.  
 
 ## Special URLs
 * **Select file to debug:** ``http://local-pseudodomain/perl-debugger?select-file``

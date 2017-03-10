@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+use utf8;
+use open ':std', ':encoding(UTF-8)';
 use FindBin qw($Bin);
 use File::Spec::Functions qw(catdir);
 use lib catdir($Bin, 'lib');
@@ -160,8 +162,7 @@ DEBUGGER_OUTPUT
 # READING PERL DEBUGGER OUTPUT:
 ##############################
 
-my $perl_debugger_output;
-read (STDIN, $perl_debugger_output, $ENV{'CONTENT_LENGTH'});
+my $perl_debugger_output = $ENV{'QUERY_STRING'};
 
 my $lineinfo = undef;
 my @debugger_output = split /\n/, $perl_debugger_output;

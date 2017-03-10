@@ -21,9 +21,6 @@
 #include <QApplication>
 #include <QProcess>
 
-// #include <QDateTime>
-// #include <QDebug>
-
 // ==============================
 // FORMATTER HANDLER DEFINITION:
 // ==============================
@@ -32,43 +29,32 @@ class QFormatterHandler : public QObject
     Q_OBJECT
 
 signals:
-    void scriptFinishedSignal(QString formatterAccumulatedOutput,
-                              QString formatterAccumulatedErrors);
+    void formatterFinishedSignal(QString formatterAccumulatedOutput,
+                                 QString formatterAccumulatedErrors);
 
 public slots:
-    void qScriptOutputSlot()
+    void qFormatterOutputSlot()
     {
         QString output = formatterProcess.readAllStandardOutput();
         formatterAccumulatedOutput.append(output);
-
-        // qDebug() << QDateTime::currentMSecsSinceEpoch()
-        //          << "msecs from epoch: formatter output received.";
     }
 
-    void qScriptErrorsSlot()
+    void qFormatterErrorsSlot()
     {
         QString scriptErrors = formatterProcess.readAllStandardError();
         formatterAccumulatedErrors.append(scriptErrors);
-
-        // qDebug() << QDateTime::currentMSecsSinceEpoch()
-        //          << "msecs from epoch: errors from" << scriptFullFilePath;
-        // qDebug() << "Formatter errors:" << formatterErrors;
     }
 
-    void qScriptFinishedSlot()
+    void qFormatterFinishedSlot()
     {
-        emit scriptFinishedSignal(formatterAccumulatedOutput,
-                                  formatterAccumulatedErrors);
+        emit formatterFinishedSignal(formatterAccumulatedOutput,
+                                     formatterAccumulatedErrors);
 
         formatterProcess.close();
-
-        // qDebug() << QDateTime::currentMSecsSinceEpoch()
-        //          << "msecs from epoch: formatter finished:"
-        //          << formatterFullFilePath;
     }
 
 public:
-    QFormatterHandler(QByteArray postData);
+    QFormatterHandler(QByteArray debuggerData);
     QProcess formatterProcess;
     QString formatterAccumulatedOutput;
     QString formatterAccumulatedErrors;

@@ -18,40 +18,30 @@
 #include <QDir>
 #include <QUrl>
 
-// #include <QTimer>
-
 #include "formatter-handler.h"
 
 // ==============================
 // FORMATTER HANDLER CONSTRUCTOR:
 // ==============================
-QFormatterHandler::QFormatterHandler(QByteArray postDataArray)
+QFormatterHandler::QFormatterHandler(QByteArray debuggerData)
     : QObject(0)
 {
     QObject::connect(&formatterProcess, SIGNAL(readyReadStandardOutput()),
-                     this, SLOT(qScriptOutputSlot()));
+                     this, SLOT(qFormatterOutputSlot()));
     QObject::connect(&formatterProcess, SIGNAL(readyReadStandardError()),
-                     this, SLOT(qScriptErrorsSlot()));
+                     this, SLOT(qFormatterErrorsSlot()));
     QObject::connect(&formatterProcess,
                      SIGNAL(finished(int, QProcess::ExitStatus)),
                      this,
-                     SLOT(qScriptFinishedSlot()));
+                     SLOT(qFormatterFinishedSlot()));
 
-    QProcessEnvironment scriptEnvironment =
+    QProcessEnvironment formatterEnvironment =
             QProcessEnvironment::systemEnvironment();
-
-    QString postData(postDataArray);
-
-    if (postData.length() > 0) {
-        scriptEnvironment.insert("REQUEST_METHOD", "POST");
-        QString postDataSize = QString::number(postData.size());
-        scriptEnvironment.insert("CONTENT_LENGTH", postDataSize);
-    }
-
-    formatterProcess.setProcessEnvironment(scriptEnvironment);
+    formatterEnvironment.insert("QUERY_STRING", debuggerData);
+    formatterProcess.setProcessEnvironment(formatterEnvironment);
 
     formatterProcess.setWorkingDirectory(
-                qApp->property("formatterScriptDir").toString());
+                qApp->property("reourcesDirectory").toString());
 
     // Formatter script is read only once at application startup,
     // than it is stored as an application property in memory and
@@ -61,11 +51,4 @@ QFormatterHandler::QFormatterHandler(QByteArray postDataArray)
                            << "-e"
                            << qApp->property("formatterScript").toString(),
                            QProcess::Unbuffered | QProcess::ReadWrite);
-
-    if (postData.length() > 0) {
-        formatterProcess.write(postDataArray);
-    }
-
-    // qDebug() << QDateTime::currentMSecsSinceEpoch()
-    //          << "msecs from epoch: formatter started.";
 }

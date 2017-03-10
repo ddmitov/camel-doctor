@@ -25,9 +25,6 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-//#include <QDateTime>
-//#include <QDebug>
-
 #include <formatter-handler.h>
 #include <file-reader.h>
 #include <file-selector.h>
@@ -58,10 +55,6 @@ public slots:
 
     void qStartDebuggerSlot(QStringList commandLine)
     {
-        // qDebug() << QDateTime::currentMSecsSinceEpoch()
-        //          << "msecs from epoch: file passed to Perl debugger:"
-        //          << scriptToDebugFilePath;
-
         if (debuggerHandler.isOpen()) {
             debuggerHandler.close();
         }
@@ -97,10 +90,6 @@ public slots:
 
         if (debuggerHandler.isOpen()) {
             if (debuggerCommand.length() > 0) {
-                // qDebug() << QDateTime::currentMSecsSinceEpoch()
-                //          << "msecs from epoch: Perl debugger command:"
-                //          << debuggerCommand;
-
                 QByteArray debuggerCommandArray;
                 debuggerCommandArray.append(debuggerCommand.toLatin1());
                 debuggerCommandArray.append(QString("\n").toLatin1());
@@ -118,11 +107,6 @@ public slots:
         // the accumulated debugger output:
         debuggerAccumulatedOutput.append(debuggerOutput);
 
-        // qDebug() << QDateTime::currentMSecsSinceEpoch()
-        //          << "msecs from epoch:"
-        //          << "Perl debugger raw output:" << endl
-        //          << debuggerOutput;
-
         // Formatting of Perl debugger output is started only after
         // the final command prompt comes out of the debugger:
         if (debuggerAccumulatedOutput.contains(QRegExp ("DB\\<\\d{1,5}\\>"))) {
@@ -134,7 +118,7 @@ public slots:
                     new QFormatterHandler(debuggerOutputArray);
 
             QObject::connect(scriptHandler,
-                             SIGNAL(scriptFinishedSignal(QString,
+                             SIGNAL(formatterFinishedSignal(QString,
                                                          QString)),
                              this,
                              SLOT(qFormatterFinishedSlot(QString,

@@ -62,7 +62,7 @@ public slots:
         // Sеt the environment for the Perl debugger:
         QProcessEnvironment systemEnvironment =
                 QProcessEnvironment::systemEnvironment();
-        systemEnvironment.insert("PERLDB_OPTS", "ReadLine=0");
+        //systemEnvironment.insert("PERLDB_OPTS", "ReadLine=0");
         debuggerHandler.setProcessEnvironment(systemEnvironment);
 
         // Set the working directory to the script directory:

@@ -137,6 +137,8 @@ http://www.comp.leeds.ac.uk/cgi-bin/Perl/displaytext/cgi-bin/read-input
 ## HTML, CSS & JavaScript
 http://stackoverflow.com/questions/4622086/widthauto-for-input-fields  
 
+https://www.w3schools.com/TAgs/att_input_autofocus.asp
+
 http://css3buttongenerator.com/  
 http://callmenick.com/post/various-css-input-text-styles  
 

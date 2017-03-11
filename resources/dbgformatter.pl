@@ -147,7 +147,7 @@ HIGHLIGHTED_SOURCE
     <form action='http://local-pseudodomain/perl-debugger' method='get'>
       <input type='text' name='command'
         placeholder='Type Perl debugger command and press Enter'
-        title='Debugger Command'>
+        title='Debugger Command' autofocus>
     </form>
 
     <div class='debugger'>
@@ -172,29 +172,32 @@ foreach my $debugger_output_line (@debugger_output) {
   }
 }
 
-# Purely aesthetic replacement:
-$perl_debugger_output =~ s/\`/\'/g;
-# Editor support is not available within the Perl debugger GUI:
-$perl_debugger_output =~ s/Editor support available.(\n|(\r\n))//g;
-# 'man perldebug' is also not available within the Perl debugger GUI:
-$perl_debugger_output =~ s/, or \'man perldebug\' for more help//g;
-# Remove debugger command prompt line:
-$perl_debugger_output =~ s/\s{1,}DB\<\d{1,}\>\s//g;
+# Editor support is not available within Camel Doctor:
+$perl_debugger_output =~ s/Editor support available.(\n|(\r\n))//;
+# 'man perldebug' is also not available within Camel Doctor:
+$perl_debugger_output =~ s/, or \'man perldebug\' for more help//;
 # Remove ASCII escape characters:
 $perl_debugger_output =~ s/\033//g;
 # Remove terminal characters:
 $perl_debugger_output =~ s/\[\d{1,2}m//g;
+# Replace any tabs with spaces:
+$perl_debugger_output =~ s/\t/ /g;
+
+# Remove repeated line number after line info;
+# reason for repeated line number is unknown?
+$perl_debugger_output =~ s/\)\:\s{1,2}\d{1,5}\:/\)\:/;
+
+# Remove debugger command prompt line:
+# $perl_debugger_output =~ s/\s{1,}DB\<\d{1,}\>\s//g;
 
 # Escape any angled brackets from HTML tags so that
 # any HTML output from the debugger is not rendered;
 # sequence of substitute statements is important here:
 $perl_debugger_output =~ s/\</&lt;/g;
 $perl_debugger_output =~ s/\</&gt;/g;
-# Replace any tabs with spaces:
-$perl_debugger_output =~ s/\t/ /g;
 # Replace three or more newline characters with
 # two newline characters and HTML <br> tags;
-# sequence of substitute statements is important here too:
+# sequence of substitute statements is important here:
 $perl_debugger_output =~ s/\n{3,}/\n<br>\n<br>/g;
 # Replace any still not replaced newline characters with
 # a newline character and an HTML <br> tag.

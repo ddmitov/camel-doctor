@@ -2,17 +2,17 @@
 
 makedmg_version='v0.3'
 macdeployqt_bin=$(which macdeployqt)
-peb_bundle=$1
-peb_pro=$(dirname $0)"/src/peb.pro"
+cameldoc_bundle=$1
+cameldoc_pro=$(dirname $0)"/src/cameldoc.pro"
 
 require_bundle_config() {
-	if [ -z "$(egrep -v '^\s*\t*#' $peb_pro | grep 'BUNDLE=1')" ]
+	if [ -z "$(egrep -v '^\s*\t*#' $cameldoc_pro | grep 'BUNDLE=1')" ]
 		then
 		echo "Failed to create dmg!"
-		echo "Please, set BUNDLE=1 in $peb_pro file and rebuild project."
+		echo "Please, set BUNDLE=1 in $cameldoc_pro file and rebuild project."
 		echo
 		echo "Here is one liner to update your configuration: "
-		echo "   perl -pi -e s,BUNDLE=0,BUNDLE=1,g $peb_pro"
+		echo "   perl -pi -e s,BUNDLE=0,BUNDLE=1,g $cameldoc_pro"
 		echo
 		exit 1
 	fi
@@ -20,16 +20,15 @@ require_bundle_config() {
 
 create_dmg() {
   echo "Starting package creation..."
-  echo "$macdeployqt_bin $peb_bundle -dmg"
-  $macdeployqt_bin $peb_bundle -dmg
-  outdir=$(dirname $peb_bundle)
-  ls "$outdir/peb.dmg"
+  echo "$macdeployqt_bin $cameldoc_bundle -dmg"
+  $macdeployqt_bin $cameldoc_bundle -dmg
+  outdir=$(dirname $cameldoc_bundle)
+  ls "$outdir/cameldoc.dmg"
   echo "Finished."
 }
 
-
-echo "Perl Executing Browser DMG Packer, $makedmg_version"
-echo "Usage: makedmg.sh peb.app"
+echo "Camel Doctor DMG Packer, $makedmg_version"
+echo "Usage: makedmg.sh cameldoc.app"
 echo 
 
 require_bundle_config
@@ -45,7 +44,7 @@ if [ -z "$macdeployqt_bin" ]
 	    set QTDIR = $qtdirname
 	    if [ -z "$QTDIR" ]
 	    	then
-	    	echo "No QTDIR was set. I have quit now."
+	    	echo "No QTDIR was set. I have to quit now."
 	    	exit
 	    fi
 	    echo ""
@@ -56,14 +55,14 @@ fi
 if [ -z "$1" ]
 	then
     echo "No command line argument supplied."
-    echo "Trying to guess where peb.app is."
-    peb_bundle=$(ls -d */peb.app)
-    if [ -z "$peb_bundle" ]
+    echo "Trying to guess where cameldoc.app is."
+    peb_bundle=$(ls -d */cameldoc.app)
+    if [ -z "$cameldoc_bundle" ]
         then
-        printf "Enter full or relative path to peb.app: "
+        printf "Enter full or relative path to cameldoc.app: "
         read peb_bundle
     else
-        echo "Found [$peb_bundle]"
+        echo "Found [$cameldoc_bundle]"
     fi
 fi
 

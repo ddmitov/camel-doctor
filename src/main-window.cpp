@@ -25,4 +25,5 @@ QMainBrowserWindow::QMainBrowserWindow(QWidget *parent)
 {
     viewWidget = new QViewWidget();
     setCentralWidget(viewWidget);
+    mainWindowDisplayed = false;
 }

@@ -41,12 +41,16 @@ public slots:
     void qDisplayOutputSlot(QString output)
     {
         viewWidget->setHtml(output);
-        showMaximized();
+        if (mainWindowDisplayed == false) {
+            showMaximized();
+            mainWindowDisplayed = true;
+        }
     }
 
 public:
     explicit QMainBrowserWindow(QWidget *parent = 0);
     QViewWidget *viewWidget;
+    bool mainWindowDisplayed;
 };
 
 #endif // MAINWINDOW_H

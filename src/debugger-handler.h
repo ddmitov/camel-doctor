@@ -59,11 +59,13 @@ public slots:
             debuggerHandler.close();
         }
 
+#ifdef Q_OS_WIN
         // Sеt the environment for the Perl debugger:
         QProcessEnvironment systemEnvironment =
                 QProcessEnvironment::systemEnvironment();
-        //systemEnvironment.insert("PERLDB_OPTS", "ReadLine=0");
+        systemEnvironment.insert("PERLDB_OPTS", "ReadLine=0");
         debuggerHandler.setProcessEnvironment(systemEnvironment);
+#endif
 
         // Set the working directory to the script directory:
         QFileInfo scriptAbsoluteFilePath(commandLine.first());

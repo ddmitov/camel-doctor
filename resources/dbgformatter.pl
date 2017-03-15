@@ -27,12 +27,12 @@ my $html = "
     <style type='text/css'>
       body {
         background-color: #222222;
+        text-align: left;
+        font-size: 14px;
       }
       ol {
         SOURCE_BOX_HEIGHT
-        text-align: left;
         font-family: monospace;
-        font-size: 14px;
         overflow: auto;
         text-indent: 1%;
         color: #000000;
@@ -43,9 +43,9 @@ my $html = "
         padding-right: 0%;
         padding-top: 0%;
         padding-bottom: 0%;
-        margin: 3px 3px 3px 3px;
-        border: transparent 0px;
+        margin: 4px 4px 4px 4px;
         border-radius: 3px;
+        border: transparent 0px;
       }
       li {
         background-color: #FFFFFF;
@@ -53,13 +53,15 @@ my $html = "
       div.line {
         -webkit-user-select: auto;
       }
-      div.btn-area {
-        text-align: left;
-        padding: 10px 0px 10px 0px;
-        margin-left: 3px;
-        margin-right: 3px;
+      div.container {
+        padding-top: 4px;
+        padding-right: 0px;
+        padding-bottom: 4px;
+        padding-left: 0px;
         margin-top: 0px;
-        margin-bottom: 1px;
+        margin-right: 4px;
+        margin-bottom: 0px;
+        margin-left: 4px;
       }
       .btn {
         background: #3498db;
@@ -68,10 +70,10 @@ my $html = "
         background-image: linear-gradient(to bottom, #3498db, #2980b9);
         color: #ffffff;
         font-family: sans-serif;
-        font-size: 14px;
         text-decoration: none;
-        border-radius: 3px;
         padding: 3px 5px 3px 5px;
+        border-radius: 3px;
+        border: transparent 0px;
       }
       .btn:hover {
         background: #3cb0fd;
@@ -81,37 +83,27 @@ my $html = "
         text-decoration: none;
       }
       input[type=text] {
-        width: 99%;
+        width: 99.5%;
         font-family: sans-serif;
-        font-size: 14px;
         appearance: none;
         box-shadow: none;
-        padding: 3px 3px 3px 3px;
-        margin-left: 3px;
-        margin-right: 3px;
-        margin-top: 2px;
-        margin-bottom: 4px;
-        border: 0px transparent;
+        padding: 0.25% 0.25% 0.25% 0.25%;
         border-radius: 3px;
+        border: transparent 0px;
       }
       input[type=text]:focus {
         outline: none;
       }
       div.debugger {
         DEBUGGER_OUTPUT_BOX_HEIGHT
-        text-align: left;
         font-family: monospace;
-        font-size: 14px;
         color: #00FF00;
         background-color: #000000;
         overflow: auto;
-        padding: 3px 3px 3px 3px;
-        margin-left: 3px;
-        margin-right: 3px;
-        margin-top: 4px;
-        margin-bottom: 0px;
-        border: transparent 0px;
+        padding: 4px 4px 4px 4px;
+        margin: 4px 4px 4px 4px;
         border-radius: 3px;
+        border: transparent 0px;
       }
     </style>
   </head>
@@ -121,7 +113,11 @@ my $html = "
 HIGHLIGHTED_SOURCE
     </ol>
 
-    <div class='btn-area'>
+    <div class='debugger'>
+DEBUGGER_OUTPUT
+    </div>
+
+    <div class='container'>
       <a href='http://local-pseudodomain/perl-debugger?select-file'
         class='btn' title='Select another file'>File</a>
       <a href='http://local-pseudodomain/perl-debugger?command=n'
@@ -144,14 +140,12 @@ HIGHLIGHTED_SOURCE
         class='btn' title='Restart debugger'>R</a>
     </div>
 
-    <form action='http://local-pseudodomain/perl-debugger' method='get'>
-      <input type='text' name='command'
-        placeholder='Type Perl debugger command and press Enter'
-        title='Debugger Command' autofocus>
-    </form>
-
-    <div class='debugger'>
-DEBUGGER_OUTPUT
+    <div class='container'>
+      <form action='http://local-pseudodomain/perl-debugger' method='get'>
+        <input type='text' name='command'
+          placeholder='Type Perl debugger command and press Enter'
+          title='Debugger Command' autofocus>
+      </form>
     </div>
   </body>
 
@@ -313,26 +307,26 @@ sub source_code_highlighter {
     "\n" => "",
   },
   format_table => {
-    Alert => ["<font color=\"#0000ff\">", "</font>"],
-    BaseN => ["<font color=\"#007f00\">", "</font>"],
-    BString => ["<font color=\"#c9a7ff\">", "</font>"],
-    Char => ["<font color=\"#ff00ff\">", "</font>"],
-    Comment => ["<font color=\"#7f7f7f\"><i>", "</i></font>"],
-    DataType => ["<font color=\"#0000ff\">", "</font>"],
-    DecVal => ["<font color=\"#00007f\">", "</font>"],
-    Error => ["<font color=\"#ff0000\"><b><i>", "</i></b></font>"],
-    Float => ["<font color=\"#00007f\">", "</font>"],
-    Function => ["<font color=\"#007f00\">", "</font>"],
-    IString => ["<font color=\"#ff0000\">", ""],
+    Alert => ["<font color='#0000ff'>", "</font>"],
+    BaseN => ["<font color='#007f00'>", "</font>"],
+    BString => ["<font color='#c9a7ff'>", "</font>"],
+    Char => ["<font color='#ff00ff'>", "</font>"],
+    Comment => ["<font color='#7f7f7f'><i>", "</i></font>"],
+    DataType => ["<font color='#0000ff'>", "</font>"],
+    DecVal => ["<font color='#00007f'>", "</font>"],
+    Error => ["<font color='#ff0000'><b><i>", "</i></b></font>"],
+    Float => ["<font color='#00007f'>", "</font>"],
+    Function => ["<font color='#007f00'>", "</font>"],
+    IString => ["<font color='#ff0000'>", ""],
     Keyword => ["<b>", "</b>"],
     Normal => ["", ""],
-    Operator => ["<font color=\"#ffa500\">", "</font>"],
-    Others => ["<font color=\"#b03060\">", "</font>"],
-    RegionMarker => ["<font color=\"#96b9ff\"><i>", "</i></font>"],
-    Reserved => ["<font color=\"#9b30ff\"><b>", "</b></font>"],
-    String => ["<font color=\"#ff0000\">", "</font>"],
-    Variable => ["<font color=\"#0000ff\"><b>", "</b></font>"],
-    Warning => ["<font color=\"#0000ff\"><b><i>", "</b></i></font>"],
+    Operator => ["<font color='#ffa500'>", "</font>"],
+    Others => ["<font color='#b03060'>", "</font>"],
+    RegionMarker => ["<font color='#96b9ff'><i>", "</i></font>"],
+    Reserved => ["<font color='#9b30ff'><b>", "</b></font>"],
+    String => ["<font color='#ff0000'>", "</font>"],
+    Variable => ["<font color='#0000ff'><b>", "</b></font>"],
+    Warning => ["<font color='#0000ff'><b><i>", "</b></i></font>"],
     },
    );
   return $source_code_highlighter;

@@ -138,6 +138,10 @@ DEBUGGER_OUTPUT
         class='btn' title='Step Into...'>s</a>
       <a href='http://local-pseudodomain/perl-debugger?command=R'
         class='btn' title='Restart debugger'>R</a>
+      &nbsp;
+      <a style='color: #ffffff; font-family: sans-serif;'>
+        COMMAND_PROMPT
+      </a>
     </div>
 
     <div class='container'>
@@ -159,10 +163,17 @@ DEBUGGER_OUTPUT
 my $perl_debugger_output = $ENV{'QUERY_STRING'};
 
 my $lineinfo = undef;
+my $command_prompt;
+
 my @debugger_output = split /\n/, $perl_debugger_output;
 foreach my $debugger_output_line (@debugger_output) {
   if ($debugger_output_line =~ m/[\(\[].*\:\d{1,5}[\)\]]/) {
     $lineinfo = $debugger_output_line;
+  }
+  if ($debugger_output_line =~ m/\s{1,}DB\<\d{1,}\>\s/) {
+    $command_prompt = $debugger_output_line;
+    chomp $command_prompt;
+    $perl_debugger_output =~ s/\s{1,}DB\<\d{1,}\>\s//;
   }
 }
 
@@ -180,9 +191,6 @@ $perl_debugger_output =~ s/\t/ /g;
 # Remove repeated line number after line info;
 # reason for repeated line number is unknown?
 $perl_debugger_output =~ s/\)\:\s{1,2}\d{1,5}\:/\)\:/;
-
-# Remove debugger command prompt line:
-# $perl_debugger_output =~ s/\s{1,}DB\<\d{1,}\>\s//g;
 
 # Escape any angled brackets from HTML tags so that
 # any HTML output from the debugger is not rendered;
@@ -271,6 +279,7 @@ if (defined $lineinfo and
 ##############################
 my $source_box_height;
 my $debugger_output_box_height;
+
 if (defined $lineinfo or
   $perl_debugger_output !~ "Debugged program terminated") {
   $html =~ s/HIGHLIGHTED_SOURCE/$formatted_perl_source_code/;
@@ -287,6 +296,8 @@ if (defined $lineinfo or
   $html =~ s/DEBUGGER_OUTPUT/$perl_debugger_output/;
   $html =~ s/HIGHLIGHTED_SOURCE//;
 }
+
+$html =~ s/COMMAND_PROMPT/$command_prompt/;
 
 print $html;
 

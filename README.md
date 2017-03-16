@@ -7,7 +7,7 @@ Camel Doctor
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/ddmitov/camel-doctor?branch=master&svg=true)](https://ci.appveyor.com/project/ddmitov/camel-doctor)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/11917/badge.svg)](https://scan.coverity.com/projects/ddmitov-camel-doctor)  
 
-Camel Doctor is a serverless HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html) in the form of a C++ [Qt 5](https://www.qt.io/) desktop application. The debugger output is displayed together with the syntax highlighted source code of the debugged script and its modules.  
+Camel Doctor is a serverless HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html) in the form of a C++ [Qt 5](https://www.qt.io/) desktop application for Linux, Mac or Windows. The debugger output is displayed together with the syntax highlighted source code of the debugged script and its modules.  
 
 Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) CPAN module by Hans Jeuken and Gábor Szabó.  
 Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and provoked by the scarcity of graphical frontends for the Perl debugger.  
@@ -21,7 +21,7 @@ Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and pr
 * [Command-Line Usage](#command-line-usage)
 * [GUI Usage](#gui-usage)
 * [Files and Folders](#files-and-folders)
-* [Windows Note](#windows-note)
+* [Windows Notes](#windows-notes)
 * [Special URLs](#special-urls)
 * [History](#history)
 * [License](#license)
@@ -30,16 +30,17 @@ Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and pr
 ## Compile-time Requirements
 * GCC compiler
 * Qt 5 headers and libraries.  
-  ``QtWebKit`` is used with all Qt versions up to Qt 5.5.  
-  ``QtWebEngine`` is used with all Qt versions starting from Qt 5.6.
+  ``QtWebKit`` is used with all Qt 5 versions up to Qt 5.5.  
+  ``QtWebEngine`` is used with all Qt 5 versions starting from Qt 5.6.
 
 Compiled and tested successfully using:
-* [Qt Creator 3.5.1 and Qt 5.5.1](http://download.qt.io/official_releases/qt/5.5/5.5.1/) on 64-bit Lubuntu 16.04 Linux
+* [Qt Creator 3.5.1 and Qt 5.5.1](http://download.qt.io/archive/qt/5.5/5.5.1/) on 64-bit Lubuntu 16.04 Linux
 * [Qt Creator 4.2.1 and Qt 5.8.0](http://download.qt.io/official_releases/qt/5.8/5.8.0/) on 64-bit Lubuntu 16.04 Linux
+* [Qt Creator 3.0.0 and Qt 5.2.0](http://download.qt.io/archive/qt/5.2/5.2.0/) on 32-bit Windows XP
 
 ## Runtime Requirements
 * Qt 5 libraries
-* Perl 5 distribution - any Linux, Mac or Windows Perl distribution
+* Perl 5 distribution
 
 ## Macintosh Binary Type
 Macintosh binary type is set in a compile-time variable located in the ``cameldoc.pro`` project file.
@@ -77,10 +78,14 @@ When Camel Doctor is started by double-clicking the binary, a file selection dia
 
 Camel Doctor may use a Perl interpreter in ``{camel_doctor_binary_directory}/perl/bin`` folder. The interpreter must be named ``perl`` on Linux and Mac machines and ``perl.exe`` on Windows machines. If Perl interpreter is not found in the above location, Camel Doctor will try to find the first Perl interpreter on PATH. If no Perl interpreter is found, an error page is displayed.
 
-## Windows Note
-Windows versions of ``perl5db.pl`` can not work with Camel Doctor without a small, one-line modification, which makes the ``$console`` variable undefined - ``$console = "con"`` must be replaced by ``undef $console``. Tests proved that this minor change does not affect the normal operation of the debugger. Without the alteration the debugger is unable to find a console and hangs because the debugger handling ``Qprocess`` class does not use any console from the underlying operating system.  
+## Windows Notes
+* Windows versions of ``perl5db.pl`` can not work with Camel Doctor without a small, one-line modification,
+which makes the ``$console`` variable undefined - ``$console = "con"`` must be replaced by ``undef $console``. Tests proved that this minor change does not affect the normal operation of the debugger. Without the alteration the debugger is unable to find a console and hangs because the debugger handling ``Qprocess`` class does not use any console from the underlying operating system.  
+A patched copy of the debugger placed in a temporary folder is used by Camel Doctor on Windows to avoid manually editing the Perl debugger.
 
-A patched copy of the debugger placed in a temporary folder is used by Camel Doctor on Windows to avoid manually editing the Perl debugger.  
+* The ``PERLDB_OPTS`` environment variable has to be set to ``ReadLine=0`` for the proper operation of the Windows Perl debugger started by Camel Doctor. This environment variable is automatically enabled in every Windows built.
+
+* Camel Doctor Windows builds can not work if the ActiveState Perl Dev Kit graphical debugger is installed because it intercepts all ``perl -d`` calls.
 
 ## Special URLs
 * **Select file to debug:** ``http://local-pseudodomain/perl-debugger?select-file``

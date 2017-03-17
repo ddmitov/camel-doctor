@@ -151,31 +151,34 @@ int main(int argc, char **argv)
     perlExecutable = "perl.exe";
 #endif
 
-    QString perlInterpreter;
+    QString perlInterpreterFullPath;
     QString privatePerlInterpreterFullPath =
             QDir::toNativeSeparators(
                 binaryDirName + "/perl/bin/" + perlExecutable);
 
-    QFile privatePerlInterpreterFile(privatePerlInterpreterFullPath);
-    if (!privatePerlInterpreterFile.exists()) {
-        // Find the full path to the Perl interpreter on PATH:
-        QProcess systemPerlTester;
-        systemPerlTester.start("perl",
-                               QStringList()
-                               << "-e"
-                               << "print $^X;");
+    // Find the full path to the first Perl interpreter on PATH:
+    QProcess systemPerlTester;
+    systemPerlTester.start("perl",
+                           QStringList()
+                           << "-e"
+                           << "print $^X;");
 
-        if (systemPerlTester.waitForFinished()) {
-            QByteArray testingScriptResultArray =
-                    systemPerlTester.readAllStandardOutput();
-            perlInterpreter =
-                    QString::fromLatin1(testingScriptResultArray);
-        }
-    } else {
-        perlInterpreter = privatePerlInterpreterFullPath;
+    if (systemPerlTester.waitForFinished()) {
+        QByteArray testingScriptResultArray =
+                systemPerlTester.readAllStandardOutput();
+        perlInterpreterFullPath =
+                QString::fromLatin1(testingScriptResultArray);
     }
 
-    application.setProperty("perlInterpreter", perlInterpreter);
+    // Find private Perl interpreter:
+    if (perlInterpreterFullPath.length() == 0) {
+        QFile privatePerlInterpreterFile(privatePerlInterpreterFullPath);
+        if (privatePerlInterpreterFile.exists()) {
+            perlInterpreterFullPath = privatePerlInterpreterFullPath;
+        }
+    }
+
+    application.setProperty("perlInterpreter", perlInterpreterFullPath);
 
     // ==============================
     // Resources directory:
@@ -251,14 +254,15 @@ int main(int argc, char **argv)
     // ==============================
     // Missing Perl interpreter error message:
     // ==============================
-    if (perlInterpreter.length() == 0) {
+    if (perlInterpreterFullPath.length() == 0) {
         QFileReader *resourceReader =
                 new QFileReader(QString(":/error.html"));
         QString htmlErrorContents = resourceReader->fileContents;
 
-        QString errorMessage = privatePerlInterpreterFullPath + "<br>"
-                + "is not found and "
-                + "no Perl interpreter is available on PATH.";
+        QString errorMessage =
+                "No Perl interpreter is available on PATH and<br>" +
+                privatePerlInterpreterFullPath +
+                "is not found.";
         htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
 
         mainWindow.viewWidget->setHtml(htmlErrorContents);
@@ -268,7 +272,7 @@ int main(int argc, char **argv)
     bool scriptToDebugExists = true;
     QString scriptToDebug;
 
-    if (perlInterpreter.length() > 0) {
+    if (perlInterpreterFullPath.length() > 0) {
         // ==============================
         // Perl debugger handler initialization:
         // ==============================

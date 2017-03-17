@@ -76,7 +76,11 @@ When Camel Doctor is started by double-clicking the binary, a file selection dia
 ## Files and Folders
 ``{camel_doctor_binary_directory}/resources`` is home of all Camel Doctor support scripts and the [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) module. This folder and all files inside it should not be removed or renamed for the proper operation of Camel Doctor.  
 
-Camel Doctor may use a Perl interpreter in ``{camel_doctor_binary_directory}/perl/bin`` folder. The interpreter must be named ``perl`` on Linux and Mac machines and ``perl.exe`` on Windows machines. If Perl interpreter is not found in the above location, Camel Doctor will try to find the first Perl interpreter on PATH. If no Perl interpreter is found, an error page is displayed.
+Camel Doctor will try to find and use the first Perl interpreter on PATH.  
+If no Perl interpreter is found on PATH, Camel Doctor may use  
+``{camel_doctor_binary_directory}/perl/bin/perl`` on Linux and Mac machines or
+``{camel_doctor_binary_directory}/perl/bin/perl.exe`` on Windows machines.  
+If no Perl interpreter is found, an error page is displayed.
 
 ## Windows Notes
 * Windows versions of ``perl5db.pl`` can not work with Camel Doctor without a small, one-line modification,

@@ -204,7 +204,7 @@ int main(int argc, char **argv)
                 QDir::toNativeSeparators(tempDirectory.path() + "/perl5db.pl");
 
         QProcess perlDebuggerLoader;
-        perlDebuggerLoader.start(perlInterpreter,
+        perlDebuggerLoader.start(perlInterpreterFullPath,
                                  QStringList()
                                  << debuggerLoaderPath
                                  << modifiedDebuggerPath);

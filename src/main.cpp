@@ -158,7 +158,19 @@ int main(int argc, char **argv)
 
     QFile privatePerlInterpreterFile(privatePerlInterpreterFullPath);
     if (!privatePerlInterpreterFile.exists()) {
-        perlInterpreter = "perl";
+        // Find the full path to the Perl interpreter on PATH:
+        QProcess systemPerlTester;
+        systemPerlTester.start("perl",
+                               QStringList()
+                               << "-e"
+                               << "print $^X;");
+
+        if (systemPerlTester.waitForFinished()) {
+            QByteArray testingScriptResultArray =
+                    systemPerlTester.readAllStandardOutput();
+            perlInterpreter =
+                    QString::fromLatin1(testingScriptResultArray);
+        }
     } else {
         perlInterpreter = privatePerlInterpreterFullPath;
     }

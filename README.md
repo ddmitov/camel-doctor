@@ -9,7 +9,8 @@ Camel Doctor
 
 Camel Doctor is a serverless HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html). It is a C++ [Qt 5](https://www.qt.io/) desktop application for Linux, Mac or Windows displaying debugger output with syntax highlighted source code.  
 
-Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and provoked by the scarcity of graphical frontends for the Perl debugger.  
+Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and provoked by the scarcity of graphical front ends for the Perl debugger.  
+
 Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) CPAN module by Hans Jeuken and Gábor Szabó.  
 
 ![Camel Doctor](https://github.com/ddmitov/camel-doctor/raw/master/screenshot.png "Camel Doctor Screenshot")
@@ -63,9 +64,9 @@ Macintosh binary type is set in a compile-time variable located in the ``cameldo
 
 ``cameldoc script-pathname argument-1 argument-2``  
 
-When started from the command line, Camel Doctor takes all the command-line arguments after the script pathname and passes them to the Perl debugger. All environment variables from the command-line shell (preset or manually added) are also inherited by the Perl debugger. These features are implemented for debugging of command-line Perl scripts and scripts requiring special environment variables.  
+When started from the command line, Camel Doctor takes all command-line arguments after the script pathname and passes them to the Perl debugger. All environment variables from the command-line shell (preset or manually added) are also inherited by the Perl debugger.  
 
-If only relative pathname is supplied for the debugged script, it is converted to an absolute pathname using the working directory of Camel Doctor. If the supplied script pathname does not correspond to an existing file, an error page is displayed.  
+If a relative script pathname is supplied, it is converted to an absolute pathname using the working directory of Camel Doctor. If the resulting script pathname does not correspond to an existing file, an error page is displayed.  
 
 When Camel Doctor is started from terminal on a Unix-like operating system, it will start another detached copy of itself and close the first one. This is necessary to capture the output from the Perl debugger.
 
@@ -91,7 +92,7 @@ If no Perl interpreter is found, an error page is displayed.
 * ``perl5db.pl`` can not work with Camel Doctor on Windows without a small, one-line modification,
 making the ``$console`` variable undefined - ``$console = "con"`` is replaced by ``undef $console``. Tests proved that this minor change does not affect the normal operation of the debugger. Without the alteration the debugger is unable to find a console and hangs because the debugger handling ``Qprocess`` class does not use any console from the operating system. A patched copy of the debugger placed in a temporary folder is used by Camel Doctor on Windows to avoid manually editing the Perl debugger.
 
-* The ``PERLDB_OPTS`` environment variable has to be set to ``ReadLine=0`` for the proper operation of the Windows Perl debugger started by Camel Doctor. This environment variable is automatically enabled in every Windows built.
+* The ``PERLDB_OPTS`` environment variable has to be set to ``ReadLine=0`` for the proper operation of the Perl debugger started by Camel Doctor on Windows. This environment variable is automatically enabled in every Windows built.
 
 * Camel Doctor Windows builds can not work if the ActiveState Perl Dev Kit graphical debugger is installed because it intercepts all ``perl -d`` calls.
 

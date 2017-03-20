@@ -3,13 +3,11 @@
 use strict;
 use warnings;
 
-use File::Spec::Functions qw(catdir);
-
+# Find perl5db.pl:
 my $original_debugger_full_path;
-
 foreach my $path(@INC) {
-  if (-e catdir($path, 'perl5db.pl')) {
-    $original_debugger_full_path = catdir($path, 'perl5db.pl');
+  if (-e "$path/perl5db.pl") {
+    $original_debugger_full_path = "$path/perl5db.pl";
   }
 }
 

@@ -188,38 +188,6 @@ int main(int argc, char **argv)
 
     application.setProperty("reourcesDirectory", reourcesDirectory);
 
-#ifdef Q_OS_WIN
-    // ==============================
-    // Modified Perl debugger:
-    // ==============================
-    QString debuggerLoaderPath;
-    QTemporaryDir tempDirectory;
-    QString modifiedDebuggerPath;
-
-    if (tempDirectory.isValid()) {
-        debuggerLoaderPath =
-                QDir::toNativeSeparators(reourcesDirectory + "/dbgloader.pl");
-
-        modifiedDebuggerPath =
-                QDir::toNativeSeparators(tempDirectory.path() + "/perl5db.pl");
-
-        QProcess perlDebuggerLoader;
-        perlDebuggerLoader.start(perlInterpreterFullPath,
-                                 QStringList()
-                                 << debuggerLoaderPath
-                                 << modifiedDebuggerPath);
-
-        modifiedDebuggerPath.replace("\\", "\\\\");
-
-        if (perlDebuggerLoader.waitForFinished()) {
-            qputenv ("PERL5DB",
-                     "BEGIN {require \"" +
-                     modifiedDebuggerPath.toLatin1() +
-                     "\"}");
-        }
-    }
-#endif
-
     // ==============================
     // Formatter script:
     // ==============================
@@ -269,8 +237,55 @@ int main(int argc, char **argv)
         mainWindow.showMaximized();
     }
 
-    bool scriptToDebugExists = true;
     QString scriptToDebug;
+
+#ifdef Q_OS_WIN
+    // ==============================
+    // Modified Perl debugger for all Windows builds:
+    // ==============================
+    QTemporaryDir tempDirectory;
+
+    if (perlInterpreterFullPath.length() > 0 and tempDirectory.isValid()) {
+        QString debuggerLoaderPath =
+                QDir::toNativeSeparators(reourcesDirectory + "/dbgloader.pl");
+
+        QString modifiedDebuggerPath =
+                QDir::toNativeSeparators(tempDirectory.path() + "/perl5db.pl");
+
+        QProcess perlDebuggerLoader;
+        perlDebuggerLoader.start(perlInterpreterFullPath,
+                                 QStringList()
+                                 << debuggerLoaderPath
+                                 << modifiedDebuggerPath);
+
+        if (perlDebuggerLoader.waitForFinished()) {
+            QString perlDebuggerLoaderErrors =
+                    perlDebuggerLoader.readAllStandardError();
+
+            if (perlDebuggerLoaderErrors.length() > 0) {
+                QString scriptError =
+                        "<h3>Perl debugger loader errors:</h3><pre>" +
+                        perlDebuggerLoaderErrors + "</pre>";
+
+                QFileReader *resourceReader =
+                        new QFileReader(QString(":/error.html"));
+                QString scriptFormattedErrors = resourceReader->fileContents;
+
+                scriptFormattedErrors.replace("ERROR_MESSAGE", scriptError);
+
+                mainWindow.viewWidget->setHtml(scriptFormattedErrors);
+                mainWindow.showMaximized();
+            }
+
+            if (perlDebuggerLoaderErrors.length() == 0) {
+                qputenv ("PERL5DB",
+                         "BEGIN {require \"" +
+                         modifiedDebuggerPath.replace("\\", "\\\\").toLatin1() +
+                         "\"}");
+            }
+        }
+    }
+#endif
 
     if (perlInterpreterFullPath.length() > 0) {
         // ==============================
@@ -337,21 +352,17 @@ int main(int argc, char **argv)
             }
 
             if (!scriptFile.exists()) {
-                scriptToDebugExists = false;
+                QFileReader *resourceReader =
+                        new QFileReader(QString(":/error.html"));
+                QString htmlErrorContents = resourceReader->fileContents;
+
+                QString errorMessage = "File not found:<br>" + scriptToDebug;
+                htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
+
+                mainWindow.viewWidget->setHtml(htmlErrorContents);
+                mainWindow.showMaximized();
             }
         }
-    }
-
-    if (scriptToDebugExists == false) {
-        QFileReader *resourceReader =
-                new QFileReader(QString(":/error.html"));
-        QString htmlErrorContents = resourceReader->fileContents;
-
-        QString errorMessage = "File not found:<br>" + scriptToDebug;
-        htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
-
-        mainWindow.viewWidget->setHtml(htmlErrorContents);
-        mainWindow.showMaximized();
     }
 
     return application.exec();

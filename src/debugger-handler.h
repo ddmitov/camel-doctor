@@ -109,6 +109,20 @@ public slots:
         // the accumulated debugger output:
         debuggerAccumulatedOutput.append(debuggerOutput);
 
+        if (debuggerAccumulatedOutput.contains("compilation aborted")) {
+            QString scriptError =
+                    "<h3>Perl debugger errors:</h3><pre>" +
+                    debuggerAccumulatedOutput + "</pre>";
+
+            QFileReader *resourceReader =
+                    new QFileReader(QString(":/error.html"));
+            QString scriptFormattedErrors = resourceReader->fileContents;
+
+            scriptFormattedErrors.replace("ERROR_MESSAGE", scriptError);
+
+            qDisplayOutputSignal(scriptFormattedErrors);
+        }
+
         // Formatting of Perl debugger output is started only after
         // the final command prompt comes out of the debugger:
         if (debuggerAccumulatedOutput.contains(QRegExp ("DB\\<\\d{1,5}\\>"))) {
@@ -120,42 +134,18 @@ public slots:
                     new QFormatterHandler(debuggerOutputArray);
 
             QObject::connect(scriptHandler,
-                             SIGNAL(formatterFinishedSignal(QString,
-                                                         QString)),
+                             SIGNAL(qDisplayOutputSignal(QString)),
                              this,
-                             SLOT(qFormatterFinishedSlot(QString,
-                                                      QString)));
+                             SLOT(qDisplayOutputTransmitterSlot(QString)));
 
             // Clean any previous debugger output:
             debuggerAccumulatedOutput = "";
         }
     }
 
-    void qFormatterFinishedSlot(QString scriptAccumulatedOutput,
-                                QString scriptAccumulatedErrors)
+    void qDisplayOutputTransmitterSlot(QString output)
     {
-        if (scriptAccumulatedErrors.length() > 0) {
-            qFormatScriptErrors(scriptAccumulatedErrors);
-        }
-
-        if (scriptAccumulatedErrors.length() == 0) {
-            qDisplayOutputSignal(scriptAccumulatedOutput);
-        }
-    }
-
-    void qFormatScriptErrors(QString errors)
-    {
-        QString scriptErrorTitle = "Formatter script errors:";
-        QString scriptError =
-                "<h3>" + scriptErrorTitle + "</h3><pre>" + errors + "</pre>";
-
-        QFileReader *resourceReader =
-                new QFileReader(QString(":/error.html"));
-        QString scriptFormattedErrors = resourceReader->fileContents;
-
-        scriptFormattedErrors.replace("ERROR_MESSAGE", scriptError);
-
-        qDisplayOutputSignal(scriptFormattedErrors);
+        emit qDisplayOutputSignal(output);
     }
 
 private:

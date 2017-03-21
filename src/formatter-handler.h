@@ -21,6 +21,8 @@
 #include <QApplication>
 #include <QProcess>
 
+#include <file-reader.h>
+
 // ==============================
 // FORMATTER HANDLER DEFINITION:
 // ==============================
@@ -29,8 +31,7 @@ class QFormatterHandler : public QObject
     Q_OBJECT
 
 signals:
-    void formatterFinishedSignal(QString formatterAccumulatedOutput,
-                                 QString formatterAccumulatedErrors);
+    void qDisplayOutputSignal(QString output);
 
 public slots:
     void qFormatterOutputSlot()
@@ -47,14 +48,35 @@ public slots:
 
     void qFormatterFinishedSlot()
     {
-        emit formatterFinishedSignal(formatterAccumulatedOutput,
-                                     formatterAccumulatedErrors);
-
         formatterProcess.close();
+
+        if (formatterAccumulatedErrors.length() > 0) {
+            qFormatScriptErrors(formatterAccumulatedErrors);
+        }
+
+        if (formatterAccumulatedErrors.length() == 0) {
+            qDisplayOutputSignal(formatterAccumulatedOutput);
+        }
+    }
+
+    void qFormatScriptErrors(QString errors)
+    {
+        QString scriptError =
+                "<h3>Formatter script errors:</h3><pre>" + errors + "</pre>";
+
+        QFileReader *resourceReader =
+                new QFileReader(QString(":/error.html"));
+        QString scriptFormattedErrors = resourceReader->fileContents;
+
+        scriptFormattedErrors.replace("ERROR_MESSAGE", scriptError);
+
+        qDisplayOutputSignal(scriptFormattedErrors);
     }
 
 public:
     QFormatterHandler(QByteArray debuggerData);
+
+private:
     QProcess formatterProcess;
     QString formatterAccumulatedOutput;
     QString formatterAccumulatedErrors;

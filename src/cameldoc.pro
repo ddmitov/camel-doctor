@@ -47,7 +47,7 @@
                 message ("Configured with Mac OSX bundle support.")
             }
 
-            ICON = icons/camel.icns
+            ICON = resources/icons/camel.icns
         }
 
         # Binary basics:

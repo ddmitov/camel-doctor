@@ -32,11 +32,6 @@ QPage::QPage()
             setRequestInterceptor(requestInterceptor);
 
     QObject::connect(requestInterceptor,
-                     SIGNAL(startDebuggerSignal()),
-                     this,
-                     SLOT(qStartDebuggerSlot()));
-
-    QObject::connect(requestInterceptor,
                      SIGNAL(sendCommandToDebuggerSignal(QUrl)),
                      this,
                      SLOT(qSendCommandToDebuggerSlot(QUrl)));

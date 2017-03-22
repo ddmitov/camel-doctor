@@ -33,7 +33,6 @@ class QPage : public QWebPage
     Q_OBJECT
 
 signals:
-    void startDebuggerSignal();
     void sendCommandToDebuggerSignal(QUrl url);
 
 protected:
@@ -49,18 +48,7 @@ protected:
         if ((navigationType == QWebPage::NavigationTypeLinkClicked or
              navigationType == QWebPage::NavigationTypeFormSubmitted) and
                 request.url().fileName() == "perl-debugger") {
-
-            if (request.url().toString().contains("select-file")) {
-                emit startDebuggerSignal();
-            }
-
-            if (request.url().toString().contains("command=")) {
-                if (request.url().toString().contains("command=q")) {
-                    qApp->exit();
-                } else {
-                    emit sendCommandToDebuggerSignal(request.url());
-                }
-            }
+            emit sendCommandToDebuggerSignal(request.url());
         }
 
         return false;

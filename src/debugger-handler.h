@@ -59,14 +59,6 @@ public slots:
             debuggerHandler.close();
         }
 
-#ifdef Q_OS_WIN
-        // Sеt the environment for the Perl debugger:
-        QProcessEnvironment systemEnvironment =
-                QProcessEnvironment::systemEnvironment();
-        systemEnvironment.insert("PERLDB_OPTS", "ReadLine=0");
-        debuggerHandler.setProcessEnvironment(systemEnvironment);
-#endif
-
         // Set the working directory to the script directory:
         QFileInfo scriptAbsoluteFilePath(commandLine.first());
         QString scriptDirectory = scriptAbsoluteFilePath.absolutePath();
@@ -86,9 +78,18 @@ public slots:
         // Get a Perl debugger command:
         QUrlQuery scriptQuery(url);
 
+        if (scriptQuery.toString().contains("select-file")) {
+            qSelectFileToDebugSlot();
+        }
+
         QString debuggerCommand = scriptQuery
                 .queryItemValue("command", QUrl::FullyDecoded);
         debuggerCommand.replace("+", " ");
+
+        // Quit Camel Doctor and the Perl debugger:
+        if (debuggerCommand == "q") {
+            qApp->exit();
+        }
 
         if (debuggerHandler.isOpen()) {
             if (debuggerCommand.length() > 0) {

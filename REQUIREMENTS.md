@@ -6,4 +6,6 @@
 
 ## Runtime Requirements
 * Qt 5 libraries
-* Perl 5 distribution
+* Perl 5 distribution  
+Camel Doctor will try to find and use the first Perl interpreter on PATH.  
+If no Perl interpreter is found on PATH, an error page is displayed.

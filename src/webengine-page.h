@@ -33,15 +33,9 @@ class QPage : public QWebEnginePage
     Q_OBJECT
 
 signals:
-    void startDebuggerSignal();
     void sendCommandToDebuggerSignal(QUrl url);
 
 public slots:
-    void qStartDebuggerSlot()
-    {
-        emit startDebuggerSignal();
-    }
-
     void qSendCommandToDebuggerSlot(QUrl url)
     {
         emit sendCommandToDebuggerSignal(url);

@@ -33,16 +33,6 @@ void WebUrlRequestInterceptor::interceptRequest(
     if (info.resourceType() ==
             QWebEngineUrlRequestInfo::ResourceTypeMainFrame and
             info.requestUrl().fileName() == "perl-debugger") {
-        if (info.requestUrl().toString().contains("select-file")) {
-            emit startDebuggerSignal();
-        }
-
-        if (info.requestUrl().toString().contains("command=")) {
-            if (info.requestUrl().toString().contains("command=q")) {
-                qApp->exit();
-            } else {
-                emit sendCommandToDebuggerSignal(info.requestUrl());
-            }
-        }
+        emit sendCommandToDebuggerSignal(info.requestUrl());
     }
 }

@@ -16,17 +16,11 @@
 */
 
 #include <iostream> // std::cout
-#ifndef Q_OS_WIN
 #include <unistd.h> // isatty();
-#endif
 
 #include <qglobal.h>
 #include <QApplication>
 #include <QTextCodec>
-
-#ifdef Q_OS_WIN
-#include <QTemporaryDir>
-#endif
 
 #include "main-window.h"
 #include "debugger-handler.h"
@@ -80,10 +74,9 @@ int main(int argc, char **argv)
     // ==============================
     // Terminal detection:
     // ==============================
-    // If Camel Doctor is started from terminal on a Unix-like operating system,
+    // If Camel Doctor is started from terminal,
     // it will start another detached copy of itself and close the first one.
     // This is necessary to capture the output from the Perl debugger.
-#ifndef Q_OS_WIN
     if (isatty(fileno(stdin))) {
         // Fork another instance of the browser:
         int pid = fork();
@@ -122,7 +115,6 @@ int main(int argc, char **argv)
             return 0;
         }
     }
-#endif
 
     // ==============================
     // Binary file directory:
@@ -141,20 +133,7 @@ int main(int argc, char **argv)
     // ==============================
     // Perl interpreter:
     // ==============================
-    QString perlExecutable;
-
-#ifndef Q_OS_WIN
-    perlExecutable = "perl";
-#endif
-
-#ifdef Q_OS_WIN
-    perlExecutable = "perl.exe";
-#endif
-
     QString perlInterpreterFullPath;
-    QString privatePerlInterpreterFullPath =
-            QDir::toNativeSeparators(
-                binaryDirName + "/perl/bin/" + perlExecutable);
 
     // Find the full path to the first Perl interpreter on PATH:
     QProcess systemPerlTester;
@@ -168,14 +147,6 @@ int main(int argc, char **argv)
                 systemPerlTester.readAllStandardOutput();
         perlInterpreterFullPath =
                 QString::fromLatin1(testingScriptResultArray);
-    }
-
-    // Find private Perl interpreter:
-    if (perlInterpreterFullPath.length() == 0) {
-        QFile privatePerlInterpreterFile(privatePerlInterpreterFullPath);
-        if (privatePerlInterpreterFile.exists()) {
-            perlInterpreterFullPath = privatePerlInterpreterFullPath;
-        }
     }
 
     application.setProperty("perlInterpreter", perlInterpreterFullPath);
@@ -228,9 +199,7 @@ int main(int argc, char **argv)
         QString htmlErrorContents = resourceReader->fileContents;
 
         QString errorMessage =
-                "No Perl interpreter is available on PATH and<br>" +
-                privatePerlInterpreterFullPath +
-                "is not found.";
+                "No Perl interpreter is available on PATH.";
         htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
 
         mainWindow.viewWidget->setHtml(htmlErrorContents);
@@ -239,62 +208,11 @@ int main(int argc, char **argv)
 
     QString scriptToDebug;
 
-#ifdef Q_OS_WIN
-    // ==============================
-    // Modified Perl debugger for all Windows builds:
-    // ==============================
-    QTemporaryDir tempDirectory;
-
-    if (perlInterpreterFullPath.length() > 0 and tempDirectory.isValid()) {
-        QString debuggerLoaderPath =
-                QDir::toNativeSeparators(reourcesDirectory + "/dbgloader.pl");
-
-        QString modifiedDebuggerPath =
-                QDir::toNativeSeparators(tempDirectory.path() + "/perl5db.pl");
-
-        QProcess perlDebuggerLoader;
-        perlDebuggerLoader.start(perlInterpreterFullPath,
-                                 QStringList()
-                                 << debuggerLoaderPath
-                                 << modifiedDebuggerPath);
-
-        if (perlDebuggerLoader.waitForFinished()) {
-            QString perlDebuggerLoaderErrors =
-                    perlDebuggerLoader.readAllStandardError();
-
-            if (perlDebuggerLoaderErrors.length() > 0) {
-                QString scriptError =
-                        "<h3>Perl debugger loader errors:</h3><pre>" +
-                        perlDebuggerLoaderErrors + "</pre>";
-
-                QFileReader *resourceReader =
-                        new QFileReader(QString(":/error.html"));
-                QString scriptFormattedErrors = resourceReader->fileContents;
-
-                scriptFormattedErrors.replace("ERROR_MESSAGE", scriptError);
-
-                mainWindow.viewWidget->setHtml(scriptFormattedErrors);
-                mainWindow.showMaximized();
-            }
-
-            if (perlDebuggerLoaderErrors.length() == 0) {
-                qputenv ("PERL5DB",
-                         "BEGIN {require \"" +
-                         modifiedDebuggerPath.replace("\\", "\\\\").toLatin1() +
-                         "\"}");
-            }
-        }
-    }
-#endif
-
     if (perlInterpreterFullPath.length() > 0) {
         // ==============================
         // Perl debugger handler initialization:
         // ==============================
         QPerlDebuggerHandler *debuggerHandler = new QPerlDebuggerHandler();
-
-        QObject::connect(mainPage, SIGNAL(startDebuggerSignal()),
-                         debuggerHandler, SLOT(qSelectFileToDebugSlot()));
 
         QObject::connect(mainPage,
                          SIGNAL(sendCommandToDebuggerSignal(QUrl)),

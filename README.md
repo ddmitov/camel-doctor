@@ -22,7 +22,6 @@ Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://
 * [Command-Line Usage](#command-line-usage)
 * [GUI Usage](#gui-usage)
 * [Files and Folders](#files-and-folders)
-* [Windows Note](#windows-note)
 * [Special URLs](#special-urls)
 * [History](#history)
 * [License](#license)
@@ -30,9 +29,10 @@ Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://
 
 ## Compile-time Requirements
 * GCC compiler
+
 * Qt 5 headers and libraries.  
-  ``QtWebKit`` is used with all Qt 5 versions up to Qt 5.5.  
-  ``QtWebEngine`` is used with all Qt 5 versions starting from Qt 5.6.
+  ``QtWebKit`` headers are used with all Qt 5 versions up to Qt 5.5.  
+  ``QtWebEngine`` headers are used with all Qt 5 versions starting from Qt 5.6.
 
 Compiled and tested successfully using:
 * [Qt Creator 3.5.1 and Qt 5.5.1](http://download.qt.io/archive/qt/5.5/5.5.1/) on 64-bit Lubuntu 16.04 Linux
@@ -56,10 +56,13 @@ Macintosh binary type is set in a compile-time variable located in the ``cameldo
   ```
 
 ## Runtime Requirements
-  * Qt 5 libraries
-  * Perl 5 distribution  
-  Camel Doctor will try to find and use the first Perl interpreter on PATH.  
-  If no Perl interpreter is found on PATH, an error page is displayed.
+* Qt 5 libraries
+``QtWebKit`` libraries are used with all Qt 5 versions up to Qt 5.5.  
+``QtWebEngine`` libraries are used with all Qt 5 versions starting from Qt 5.6.
+
+* Perl 5 distribution
+Camel Doctor will try to find and use the first Perl interpreter on PATH.  
+If no Perl interpreter is found on PATH, an error page is displayed.
 
 ## Command-Line Usage
 
@@ -83,11 +86,10 @@ When Camel Doctor is started by double-clicking the binary, a file selection dia
 
 * **Send debugger command:** ``http://local-pseudodomain/perl-debugger?command=M``
 
-## Windows Note
-Camel Doctor does not support the Windows platform anymore due to the fact that the debugger handling ``Qprocess`` class does not use a console from the operating system and the Perl debugger on Windows can not handle properly all commands (like restart) without a console.
-
 ## History
-Camel Doctor was started as a part of [Perl Executing Browser](https://www.github.com/ddmitov/perl-executing-browser) in 2014.
+Camel Doctor was started as a part of [Perl Executing Browser](https://www.github.com/ddmitov/perl-executing-browser) in 2014.  
+
+Camel Doctor does not support the Windows platform anymore due to the fact that the debugger handling ``Qprocess`` class does not use a console from the operating system and the Perl debugger on Windows can not handle properly all commands (like restart) without a console.
 
 ## License
 This program is free software;  

@@ -123,7 +123,6 @@ http://lemirep.wordpress.com/2013/06/01/deploying-qt-applications-on-linux-and-w
 ## Perl 5
 http://perldoc.perl.org/perldebug.html  
 
-http://stackoverflow.com/questions/1725097/how-can-i-disable-terminal-polling-for-cpan-used-from-crontab  
 http://stackoverflow.com/questions/4510550/using-perl-how-do-i-decode-or-create-those-encodings-on-the-web  
 http://stackoverflow.com/questions/15210532/use-utf8-gives-me-wide-character-in-print  
 http://stackoverflow.com/questions/787899/how-do-i-use-a-perl-module-from-a-relative-location  
@@ -135,8 +134,6 @@ https://perlmaven.com/slurp
 http://www.comp.leeds.ac.uk/cgi-bin/Perl/displaytext/cgi-bin/read-input  
 
 ## HTML, CSS & JavaScript
-http://stackoverflow.com/questions/4622086/widthauto-for-input-fields  
-
 https://www.w3schools.com/TAgs/att_input_autofocus.asp
 
 http://css3buttongenerator.com/  
@@ -146,8 +143,6 @@ http://callmenick.com/post/various-css-input-text-styles
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet  
 https://github.com/sindresorhus/awesome  
 https://github.com/IQAndreas/markdown-licenses  
-http://stackoverflow.com/questions/6695439/how-to-link-to-a-named-anchor-in-multimarkdown  
-http://meta.stackexchange.com/questions/70356/key-stroke-combination-markdown  
 
 ## Mac
 http://www.zestymeta.com/2013/02/qt-osx-app-bundles-and-you.html  
@@ -157,7 +152,3 @@ http://iconverticons.com/online/
 ## Travis CI
 http://stackoverflow.com/questions/25737062/travis-ci-for-a-qt5-project  
 https://forum.qt.io/topic/50340/installing-qt-5-4-dev-packages-in-travis-ci/16  
-
-## AppVeyor
-https://www.appveyor.com/docs/  
-http://stackoverflow.com/questions/26586006/build-qt-project-from-appveyor  

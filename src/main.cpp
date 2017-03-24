@@ -169,10 +169,17 @@ int main(int argc, char **argv)
             QDir::toNativeSeparators(
                 reourcesDirectory + "/dbgformatter.pl");
 
-    QFileReader *formatterScriptReader = new QFileReader(debuggerFormatterPath);
-    QString formatterScriptContents = formatterScriptReader->fileContents;
+    QFile debuggerFormatterFile(debuggerFormatterPath);
+    bool debuggerFormatterExists = false;
 
-    application.setProperty("formatterScript", formatterScriptContents);
+    if (debuggerFormatterFile.exists()) {
+        QFileReader *formatterScriptReader =
+                new QFileReader(debuggerFormatterPath);
+        QString formatterScriptContents = formatterScriptReader->fileContents;
+
+        application.setProperty("formatterScript", formatterScriptContents);
+        debuggerFormatterExists = true;
+    }
 
     // ==============================
     // Application icon:
@@ -189,6 +196,24 @@ int main(int argc, char **argv)
 
     QPage *mainPage = new QPage();
     mainWindow.viewWidget->setPage(mainPage);
+
+    // ==============================
+    // Missing debugger formatter error message:
+    // ==============================
+    if (debuggerFormatterExists == false) {
+        QFileReader *resourceReader =
+                new QFileReader(QString(":/error.html"));
+        QString htmlErrorContents = resourceReader->fileContents;
+
+        QString errorMessage =
+                "Perl debugger formatter is missing.<br>" +
+                debuggerFormatterPath + "<br>" +
+                "is not found.";
+        htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
+
+        mainWindow.viewWidget->setHtml(htmlErrorContents);
+        mainWindow.showMaximized();
+    }
 
     // ==============================
     // Missing Perl interpreter error message:
@@ -208,7 +233,8 @@ int main(int argc, char **argv)
 
     QString scriptToDebug;
 
-    if (perlInterpreterFullPath.length() > 0) {
+    if (debuggerFormatterExists == true and
+            perlInterpreterFullPath.length() > 0) {
         // ==============================
         // Perl debugger handler initialization:
         // ==============================

@@ -83,7 +83,7 @@ When Camel Doctor is started by double-clicking the binary, a file selection dia
 
 ## Developer Notes
 Camel Doctor handles Perl debugger output using ``{camel_doctor_binary_directory}/resources/dbgformatter.pl``  
-This script can be modified without recompilation of the binary provided that the following conditions are met:
+This script can be modified without recompilation of the Camel Doctor binary provided that the following conditions are met:
 
 1. ``dbgformatter.pl`` is not renamed.
 
@@ -95,12 +95,14 @@ This script can be modified without recompilation of the binary provided that th
 
 The working directory of ``dbgformatter.pl`` is ``{camel_doctor_binary_directory}/resources``.  
 
-``dbgformatter.pl`` is read only once at application startup, than it is stored as an application property in memory and is run as an one-liner when needed to decrease execution time.
+``dbgformatter.pl`` is read only once at application startup, than it is stored as an application property in memory and is run as an one-liner when needed to decrease execution time.  
+
+If ``{camel_doctor_binary_directory}/resources/dbgformatter.pl`` is not found, an error page is displayed.
 
 ## History
 Camel Doctor was started as a part of [Perl Executing Browser](https://www.github.com/ddmitov/perl-executing-browser) in 2014.  
 
-Camel Doctor does not support the Windows platform anymore due to the fact that the debugger handling ``Qprocess`` class does not use a console from the operating system and the Windows Perl debugger can not handle properly some commands (like restart) without a console.
+Camel Doctor does not support the Windows platform anymore due to the fact that the debugger handling ``Qprocess`` class does not use a console from the operating system and the Windows Perl debugger can not handle properly commands like restart without a console.
 
 ## License
 This program is free software;  

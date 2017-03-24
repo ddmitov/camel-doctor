@@ -164,7 +164,7 @@ int main(int argc, char **argv)
     // ==============================
     // Formatter script is read only once at application startup,
     // than it is stored as an application property in memory and
-    // is executed as an one-liner for speed:
+    // is run as an one-liner when needed to decrease execution time:
     QString debuggerFormatterPath =
             QDir::toNativeSeparators(
                 reourcesDirectory + "/dbgformatter.pl");

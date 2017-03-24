@@ -22,7 +22,7 @@ Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://
 * [Command-Line Usage](#command-line-usage)
 * [GUI Usage](#gui-usage)
 * [Files and Folders](#files-and-folders)
-* [Special URLs](#special-urls)
+* [Developer Notes](#developer-notes)
 * [History](#history)
 * [License](#license)
 * [Authors](#authors)
@@ -82,7 +82,7 @@ When Camel Doctor is started by double-clicking the binary, a file selection dia
 ``{camel_doctor_binary_directory}/resources`` is home of all Camel Doctor support files, including the [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) module. This folder and all files inside it should not be removed or renamed for the proper operation of Camel Doctor.  
 
 ## Developer Notes
-Camel Doctor handles Perl debugger formatting using ``{camel_doctor_binary_directory}/resources/dbgformatter.pl``  
+Camel Doctor handles Perl debugger output using ``{camel_doctor_binary_directory}/resources/dbgformatter.pl``  
 This script can be modified without recompilation of the binary provided that the following conditions are met:
 
 1. ``dbgformatter.pl`` is not renamed.
@@ -93,12 +93,14 @@ This script can be modified without recompilation of the binary provided that th
   * **Select file to debug:** ``http://local-pseudodomain/perl-debugger?select-file``
   * **Send debugger command:** ``http://local-pseudodomain/perl-debugger?command=M``
 
-The working directory of ``dbgformatter.pl`` is ``{camel_doctor_binary_directory}/resources``.
+The working directory of ``dbgformatter.pl`` is ``{camel_doctor_binary_directory}/resources``.  
+
+``dbgformatter.pl`` is read only once at application startup, than it is stored as an application property in memory and is run as an one-liner when needed to decrease execution time.
 
 ## History
 Camel Doctor was started as a part of [Perl Executing Browser](https://www.github.com/ddmitov/perl-executing-browser) in 2014.  
 
-Camel Doctor does not support the Windows platform anymore due to the fact that the debugger handling ``Qprocess`` class does not use a console from the operating system and the Perl debugger on Windows can not handle properly all commands (like restart) without a console.
+Camel Doctor does not support the Windows platform anymore due to the fact that the debugger handling ``Qprocess`` class does not use a console from the operating system and the Windows Perl debugger can not handle properly some commands (like restart) without a console.
 
 ## License
 This program is free software;  

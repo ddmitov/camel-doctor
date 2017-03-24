@@ -1,14 +1,11 @@
 archive/
 qt/
 tmp/
-perl/
 
-*.qm
 *.autosave
 *.user
 .qmake.stash
 Makefile
 cameldoc
-cameldoc.exe
 gdrive
 upgit

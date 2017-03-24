@@ -30,7 +30,7 @@ Syntax highlighting is achieved using [Syntax::Highlight::Engine::Kate](https://
 ## Compile-time Requirements
 * GCC compiler
 
-* Qt 5 headers and libraries.  
+* Qt 5 headers and libraries  
   ``QtWebKit`` headers are used with all Qt 5 versions up to Qt 5.5.  
   ``QtWebEngine`` headers are used with all Qt 5 versions starting from Qt 5.6.
 
@@ -81,10 +81,19 @@ When Camel Doctor is started by double-clicking the binary, a file selection dia
 ## Files and Folders
 ``{camel_doctor_binary_directory}/resources`` is home of all Camel Doctor support files, including the [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) module. This folder and all files inside it should not be removed or renamed for the proper operation of Camel Doctor.  
 
-## Special URLs
-* **Select file to debug:** ``http://local-pseudodomain/perl-debugger?select-file``
+## Developer Notes
+Camel Doctor handles Perl debugger formatting using ``{camel_doctor_binary_directory}/resources/dbgformatter.pl``  
+This script can be modified without recompilation of the binary provided that the following conditions are met:
 
-* **Send debugger command:** ``http://local-pseudodomain/perl-debugger?command=M``
+1. ``dbgformatter.pl`` is not renamed.
+
+2. Perl debugger output is read from query string.
+
+3. Commands are supplied to the Perl debugger using the following special URLs:
+  * **Select file to debug:** ``http://local-pseudodomain/perl-debugger?select-file``
+  * **Send debugger command:** ``http://local-pseudodomain/perl-debugger?command=M``
+
+The working directory of ``dbgformatter.pl`` is ``{camel_doctor_binary_directory}/resources``.
 
 ## History
 Camel Doctor was started as a part of [Perl Executing Browser](https://www.github.com/ddmitov/perl-executing-browser) in 2014.  

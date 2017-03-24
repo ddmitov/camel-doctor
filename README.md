@@ -6,7 +6,7 @@ Camel Doctor
 [![Build Status](https://travis-ci.org/ddmitov/camel-doctor.svg?branch=master)](https://travis-ci.org/ddmitov/camel-doctor)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/11917/badge.svg)](https://scan.coverity.com/projects/ddmitov-camel-doctor)  
 
-Camel Doctor is a serverless HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html).  
+Camel Doctor is a simple serverless HTML user interface for the [default Perl debugger](http://perldoc.perl.org/perldebug.html).  
 It is a C++ [Qt 5](https://www.qt.io/) desktop application for Linux and Mac combining debugger output with syntax highlighted source code.  
 
 Camel Doctor is an implementation of an idea proposed by Valcho Nedelchev and provoked by the scarcity of graphical front ends for the Perl debugger.  

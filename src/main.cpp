@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     // Basic application properties:
     // ==============================
     application.setApplicationName("Camel Doctor");
-    application.setApplicationVersion("0.1.0");
+    application.setApplicationVersion("0.2.0");
 
     // ==============================
     // UTF-8 encoding application-wide:

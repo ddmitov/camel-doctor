@@ -117,20 +117,6 @@ int main(int argc, char **argv)
     }
 
     // ==============================
-    // Binary file directory:
-    // ==============================
-    QDir binaryDir = QDir::toNativeSeparators(application.applicationDirPath());
-
-#ifdef Q_OS_MAC
-    if (BUNDLE == 1) {
-        binaryDir.cdUp();
-        binaryDir.cdUp();
-    }
-#endif
-
-    QString binaryDirName = binaryDir.absolutePath().toLatin1();
-
-    // ==============================
     // Perl interpreter:
     // ==============================
     QString perlInterpreterFullPath;
@@ -150,6 +136,20 @@ int main(int argc, char **argv)
     }
 
     application.setProperty("perlInterpreter", perlInterpreterFullPath);
+
+    // ==============================
+    // Binary file directory:
+    // ==============================
+    QDir binaryDir = QDir::toNativeSeparators(application.applicationDirPath());
+
+#ifdef Q_OS_MAC
+    if (BUNDLE == 1) {
+        binaryDir.cdUp();
+        binaryDir.cdUp();
+    }
+#endif
+
+    QString binaryDirName = binaryDir.absolutePath().toLatin1();
 
     // ==============================
     // Resources directory:
@@ -198,6 +198,22 @@ int main(int argc, char **argv)
     mainWindow.viewWidget->setPage(mainPage);
 
     // ==============================
+    // Missing Perl interpreter error message:
+    // ==============================
+    if (perlInterpreterFullPath.length() == 0) {
+        QFileReader *resourceReader =
+                new QFileReader(QString(":/error.html"));
+        QString htmlErrorContents = resourceReader->fileContents;
+
+        QString errorMessage =
+                "No Perl interpreter is available on PATH.";
+        htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
+
+        mainWindow.viewWidget->setHtml(htmlErrorContents);
+        mainWindow.showMaximized();
+    }
+
+    // ==============================
     // Missing debugger formatter error message:
     // ==============================
     if (debuggerFormatterExists == false) {
@@ -215,26 +231,10 @@ int main(int argc, char **argv)
         mainWindow.showMaximized();
     }
 
-    // ==============================
-    // Missing Perl interpreter error message:
-    // ==============================
-    if (perlInterpreterFullPath.length() == 0) {
-        QFileReader *resourceReader =
-                new QFileReader(QString(":/error.html"));
-        QString htmlErrorContents = resourceReader->fileContents;
-
-        QString errorMessage =
-                "No Perl interpreter is available on PATH.";
-        htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
-
-        mainWindow.viewWidget->setHtml(htmlErrorContents);
-        mainWindow.showMaximized();
-    }
-
     QString scriptToDebug;
 
-    if (debuggerFormatterExists == true and
-            perlInterpreterFullPath.length() > 0) {
+    if (perlInterpreterFullPath.length() > 0 and
+            debuggerFormatterExists == true) {
         // ==============================
         // Perl debugger handler initialization:
         // ==============================

@@ -1,4 +1,4 @@
-# Camel Doctor Project File
+# Camel Doctor
 
 # This program is free software;
 # you can redistribute it and/or modify it under the terms of the
@@ -9,7 +9,8 @@
 # but WITHOUT ANY WARRANTY;
 # without even the implied warranty of MERCHANTABILITY or
 # FITNESS FOR A PARTICULAR PURPOSE.
-# Dimitar D. Mitov, 2014 - 2017
+
+# Dimitar D. Mitov, 2014 - 2017, 2024
 # Valcho Nedelchev, 2014 - 2017
 # https://github.com/ddmitov/camel-doctor
 
@@ -26,11 +27,9 @@
 
         macx {
             ##########################################################
-            # MACINTOSH-SPECIFIC SETTING:
-            # To make a bundle-less binary:
+            # To make a bundle-less binary - the default behaviour:
             # BUNDLE = 0
             # CONFIG -= app_bundle
-            # By default bundle-less binary is compiled.
             # To make a bundled binary (cameldoc.app):
             # BUNDLE = 1
             # CONFIG += app_bundle
@@ -55,64 +54,31 @@
         TEMPLATE = app
         TARGET = cameldoc
 
-        # HTML engine:
-        lessThan (QT_MINOR_VERSION, 6) {
-            QT += widgets webkitwidgets
-        }
-
-        greaterThan (QT_MINOR_VERSION, 5) {
-            QT += widgets webenginewidgets
-        }
-
-        # Source files:
-        lessThan (QT_MINOR_VERSION, 6) {
-            SOURCES += \
-                debugger-handler.cpp \
-                file-reader.cpp \
-                file-selector.cpp \
-                formatter-handler.cpp \
-                main.cpp \
-                main-window.cpp \
-                webkit-page.cpp \
-                webkit-view.cpp
-        }
-
-        greaterThan (QT_MINOR_VERSION, 5) {
-            SOURCES += \
-                debugger-handler.cpp \
-                file-reader.cpp \
-                file-selector.cpp \
-                formatter-handler.cpp \
-                main.cpp \
-                main-window.cpp \
-                request-interceptor.cpp \
-                webengine-page.cpp \
-                webengine-view.cpp
-        }
+        # HTML-rendering engine:
+        QT += widgets webenginewidgets
 
         # Header files:
-        lessThan (QT_MINOR_VERSION, 6) {
-            HEADERS += \
-                debugger-handler.h \
-                file-reader.h \
-                file-selector.h \
-                formatter-handler.h \
-                main-window.h \
-                webkit-page.h \
-                webkit-view.h
-        }
+        HEADERS += \
+            debugger-handler.h \
+            file-reader.h \
+            file-selector.h \
+            formatter-handler.h \
+            main-window.h \
+            request-interceptor.h \
+            webengine-page.h \
+            webengine-view.h
 
-        greaterThan (QT_MINOR_VERSION, 5) {
-            HEADERS += \
-                debugger-handler.h \
-                file-reader.h \
-                file-selector.h \
-                formatter-handler.h \
-                main-window.h \
-                request-interceptor.h \
-                webengine-page.h \
-                webengine-view.h
-        }
+        # Source files:
+        SOURCES += \
+            debugger-handler.cpp \
+            file-reader.cpp \
+            file-selector.cpp \
+            formatter-handler.cpp \
+            main.cpp \
+            main-window.cpp \
+            request-interceptor.cpp \
+            webengine-page.cpp \
+            webengine-view.cpp
 
         # Resources:
         RESOURCES += resources/cameldoc.qrc

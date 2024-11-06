@@ -1,18 +1,19 @@
 /*
- Camel Doctor
+Camel Doctor
 
- This program is free software;
- you can redistribute it and/or modify it under the terms of the
- GNU Lesser General Public License,
- as published by the Free Software Foundation;
- either version 3 of the License, or (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.
- Dimitar D. Mitov, 2014 - 2017
- Valcho Nedelchev, 2014 - 2017
- https://github.com/ddmitov/camel-doctor
+This program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU Lesser General Public License,
+as published by the Free Software Foundation;
+either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.
+
+Dimitar D. Mitov, 2014 - 2017, 2024
+Valcho Nedelchev, 2014 - 2017
+https://github.com/ddmitov/camel-doctor
 */
 
 #ifndef PERLDEBUGGERHANDLER_H
@@ -29,10 +30,7 @@
 #include <file-reader.h>
 #include <file-selector.h>
 
-// ==============================
-// PERL DEBUGGER HANDLER DEFINITION:
-// Implementation of an idea proposed by Valcho Nedelchev
-// ==============================
+
 class QPerlDebuggerHandler : public QObject
 {
     Q_OBJECT
@@ -62,15 +60,16 @@ public slots:
         // Set the working directory to the script directory:
         QFileInfo scriptAbsoluteFilePath(commandLine.first());
         QString scriptDirectory = scriptAbsoluteFilePath.absolutePath();
+    
         debuggerHandler.setWorkingDirectory(scriptDirectory);
 
         debuggerHandler.setProcessChannelMode(QProcess::MergedChannels);
 
-        debuggerHandler.start(qApp->property("perlInterpreter").toString(),
-                              QStringList()
-                              << "-d"
-                              << commandLine,
-                              QProcess::Unbuffered | QProcess::ReadWrite);
+        debuggerHandler.start(
+            QString("perl"),
+            QStringList() << "-d" << commandLine,
+            QProcess::Unbuffered | QProcess::ReadWrite
+        );
     }
 
     void qSendCommandToDebuggerSlot(QUrl url)
@@ -82,8 +81,11 @@ public slots:
             qSelectFileToDebugSlot();
         }
 
-        QString debuggerCommand = scriptQuery
-                .queryItemValue("command", QUrl::FullyDecoded);
+        QString debuggerCommand = scriptQuery.queryItemValue(
+            "command",
+            QUrl::FullyDecoded
+        );
+
         debuggerCommand.replace("+", " ");
 
         // Quit Camel Doctor and the Perl debugger:
@@ -110,20 +112,6 @@ public slots:
         // the accumulated debugger output:
         debuggerAccumulatedOutput.append(debuggerOutput);
 
-        if (debuggerAccumulatedOutput.contains("compilation aborted")) {
-            QString scriptError =
-                    "<h3>Perl debugger errors:</h3><pre>" +
-                    debuggerAccumulatedOutput + "</pre>";
-
-            QFileReader *resourceReader =
-                    new QFileReader(QString(":/error.html"));
-            QString scriptFormattedErrors = resourceReader->fileContents;
-
-            scriptFormattedErrors.replace("ERROR_MESSAGE", scriptError);
-
-            qDisplayOutputSignal(scriptFormattedErrors);
-        }
-
         // Formatting of Perl debugger output is started only after
         // the final command prompt comes out of the debugger:
         if (debuggerAccumulatedOutput.contains(QRegExp ("DB\\<\\d{1,5}\\>"))) {
@@ -132,12 +120,14 @@ public slots:
             debuggerOutputArray.append(debuggerAccumulatedOutput.toLatin1());
 
             QFormatterHandler *scriptHandler =
-                    new QFormatterHandler(debuggerOutputArray);
+                new QFormatterHandler(debuggerOutputArray);
 
-            QObject::connect(scriptHandler,
-                             SIGNAL(qDisplayOutputSignal(QString)),
-                             this,
-                             SLOT(qDisplayOutputTransmitterSlot(QString)));
+            QObject::connect(
+                scriptHandler,
+                SIGNAL(qDisplayOutputSignal(QString)),
+                this,
+                SLOT(qDisplayOutputTransmitterSlot(QString))
+            );
 
             // Clean any previous debugger output:
             debuggerAccumulatedOutput = "";
@@ -151,6 +141,7 @@ public slots:
 
 private:
     QProcess debuggerHandler;
+
     QString debuggerAccumulatedOutput;
 
 public:

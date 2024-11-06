@@ -1,18 +1,19 @@
 ﻿/*
- Camel Doctor
+Camel Doctor
 
- This program is free software;
- you can redistribute it and/or modify it under the terms of the
- GNU Lesser General Public License,
- as published by the Free Software Foundation;
- either version 3 of the License, or (at your option) any later version.
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or
- FITNESS FOR A PARTICULAR PURPOSE.
- Dimitar D. Mitov, 2014 - 2017
- Valcho Nedelchev, 2014 - 2017
- https://github.com/ddmitov/camel-doctor
+This program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU Lesser General Public License,
+as published by the Free Software Foundation;
+either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.
+
+Dimitar D. Mitov, 2014 - 2017, 2024
+Valcho Nedelchev, 2014 - 2017
+https://github.com/ddmitov/camel-doctor
 */
 
 #include <iostream> // std::cout
@@ -25,28 +26,26 @@
 #include "main-window.h"
 #include "debugger-handler.h"
 #include "file-selector.h"
+#include "webengine-page.h"
 
-// ==============================
-// MAIN APPLICATION DEFINITION:
-// ==============================
+
 int main(int argc, char **argv)
 {
     QApplication application(argc, argv);
 
-    // ==============================
-    // Basic application properties:
-    // ==============================
     application.setApplicationName("Camel Doctor");
-    application.setApplicationVersion("0.2.0");
+    application.setApplicationVersion("0.4.0");
 
-    // ==============================
+    // Application icon:
+    QPixmap icon(32, 32);
+    icon.load(":/camel.png");
+
+    application.setWindowIcon(icon);
+
     // UTF-8 encoding application-wide:
-    // ==============================
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF8"));
 
-    // ==============================
     // Command-line arguments and help:
-    // ==============================
     QStringList commandLine = QApplication::arguments();
 
     // cameldoc --help
@@ -71,9 +70,7 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    // ==============================
     // Terminal detection:
-    // ==============================
     // If Camel Doctor is started from terminal,
     // it will start another detached copy of itself and close the first one.
     // This is necessary to capture the output from the Perl debugger.
@@ -102,11 +99,13 @@ int main(int argc, char **argv)
 
             // New instance is now detached from terminal:
             QProcess anotherInstance;
-            anotherInstance
-                    .startDetached(
-                        QApplication::applicationFilePath()
-                        .toLatin1().constData(),
-                        commandLine);
+
+            anotherInstance.startDetached(
+                QApplication::applicationFilePath()
+                .toLatin1().constData(),
+                commandLine
+            );
+
             if (anotherInstance.waitForStarted(-1)) {
                 return 0;
             }
@@ -116,30 +115,7 @@ int main(int argc, char **argv)
         }
     }
 
-    // ==============================
-    // Perl interpreter:
-    // ==============================
-    QString perlInterpreterFullPath;
-
-    // Find the full path to the first Perl interpreter on PATH:
-    QProcess systemPerlTester;
-    systemPerlTester.start("perl",
-                           QStringList()
-                           << "-e"
-                           << "print $^X;");
-
-    if (systemPerlTester.waitForFinished()) {
-        QByteArray testingScriptResultArray =
-                systemPerlTester.readAllStandardOutput();
-        perlInterpreterFullPath =
-                QString::fromLatin1(testingScriptResultArray);
-    }
-
-    application.setProperty("perlInterpreter", perlInterpreterFullPath);
-
-    // ==============================
     // Binary file directory:
-    // ==============================
     QDir binaryDir = QDir::toNativeSeparators(application.applicationDirPath());
 
 #ifdef Q_OS_MAC
@@ -151,102 +127,59 @@ int main(int argc, char **argv)
 
     QString binaryDirName = binaryDir.absolutePath().toLatin1();
 
-    // ==============================
     // Resources directory:
-    // ==============================
-    QString reourcesDirectory =
-            QDir::toNativeSeparators(binaryDirName + "/resources");
+    QString resourcesDirectory =
+    QDir::toNativeSeparators(binaryDirName + "/resources");
 
-    application.setProperty("reourcesDirectory", reourcesDirectory);
+    application.setProperty("resourcesDirectory", resourcesDirectory);
 
-    // ==============================
     // Formatter script:
-    // ==============================
     // Formatter script is read only once at application startup,
     // than it is stored as an application property in memory and
     // is run as an one-liner when needed to decrease execution time:
     QString debuggerFormatterPath =
-            QDir::toNativeSeparators(
-                reourcesDirectory + "/dbgformatter.pl");
+        QDir::toNativeSeparators(resourcesDirectory + "/dbgformatter.pl");
 
     QFile debuggerFormatterFile(debuggerFormatterPath);
     bool debuggerFormatterExists = false;
 
     if (debuggerFormatterFile.exists()) {
         QFileReader *formatterScriptReader =
-                new QFileReader(debuggerFormatterPath);
+            new QFileReader(debuggerFormatterPath);
+
         QString formatterScriptContents = formatterScriptReader->fileContents;
 
         application.setProperty("formatterScript", formatterScriptContents);
         debuggerFormatterExists = true;
+    } else {
+        qDebug() << "Perl debugger formatter is missing.";
+        qDebug() << debuggerFormatterPath + "is not found.";
     }
 
-    // ==============================
-    // Application icon:
-    // ==============================
-    QPixmap icon(32, 32);
-    icon.load(":/icons/camel.png");
-    QApplication::setWindowIcon(icon);
-
-    // ==============================
-    // MAIN WINDOW INITIALIZATION:
-    // ==============================
+    // Main window initialization:
     QMainBrowserWindow mainWindow;
-    mainWindow.setWindowIcon(icon);
-
     QPage *mainPage = new QPage();
     mainWindow.viewWidget->setPage(mainPage);
 
-    // ==============================
-    // Missing Perl interpreter error message:
-    // ==============================
-    if (perlInterpreterFullPath.length() == 0) {
-        QFileReader *resourceReader =
-                new QFileReader(QString(":/error.html"));
-        QString htmlErrorContents = resourceReader->fileContents;
-
-        QString errorMessage =
-                "No Perl interpreter is available on PATH.";
-        htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
-
-        mainWindow.viewWidget->setHtml(htmlErrorContents);
-        mainWindow.showMaximized();
-    }
-
-    // ==============================
-    // Missing debugger formatter error message:
-    // ==============================
-    if (debuggerFormatterExists == false) {
-        QFileReader *resourceReader =
-                new QFileReader(QString(":/error.html"));
-        QString htmlErrorContents = resourceReader->fileContents;
-
-        QString errorMessage =
-                "Perl debugger formatter is missing.<br>" +
-                debuggerFormatterPath + "<br>" +
-                "is not found.";
-        htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
-
-        mainWindow.viewWidget->setHtml(htmlErrorContents);
-        mainWindow.showMaximized();
-    }
-
     QString scriptToDebug;
 
-    if (perlInterpreterFullPath.length() > 0 and
-            debuggerFormatterExists == true) {
-        // ==============================
+    if (debuggerFormatterExists == true) {
         // Perl debugger handler initialization:
-        // ==============================
         QPerlDebuggerHandler *debuggerHandler = new QPerlDebuggerHandler();
 
-        QObject::connect(mainPage,
-                         SIGNAL(sendCommandToDebuggerSignal(QUrl)),
-                         debuggerHandler,
-                         SLOT(qSendCommandToDebuggerSlot(QUrl)));
+        QObject::connect(
+            mainPage,
+            SIGNAL(sendCommandToDebuggerSignal(QUrl)),
+            debuggerHandler,
+            SLOT(qSendCommandToDebuggerSlot(QUrl))
+        );
 
-        QObject::connect(debuggerHandler, SIGNAL(qDisplayOutputSignal(QString)),
-                         &mainWindow, SLOT(qDisplayOutputSlot(QString)));
+        QObject::connect(
+            debuggerHandler,
+            SIGNAL(qDisplayOutputSignal(QString)),
+            &mainWindow,
+            SLOT(qDisplayOutputSlot(QString))
+        );
 
         if (commandLine.size() == 1) {
             QFileSelector *fileSelector = new QFileSelector();
@@ -268,24 +201,26 @@ int main(int argc, char **argv)
             // the Camel Doctor binary file path and it is removed.
             commandLine.removeFirst();
 
-            QStringList formattedCommandLine;
-
             scriptToDebug = commandLine.first();
+
             // Remove terminal characters:
             scriptToDebug.replace(QRegExp("\\[\\d{1,2}m"), "");
             // Remove ASCII escape characters:
             scriptToDebug.replace(QRegExp("\\033"), "");
 
             QDir scriptPath(scriptToDebug);
+
             if (!scriptPath.isAbsolute()) {
-                scriptToDebug =
-                        QDir::toNativeSeparators(
-                            QDir::currentPath() +
-                            QDir::separator() +
-                            scriptToDebug);
+                scriptToDebug = QDir::toNativeSeparators(
+                    QDir::currentPath() +
+                    QDir::separator() +
+                    scriptToDebug
+                );
             }
 
             QFile scriptFile(scriptToDebug);
+            QStringList formattedCommandLine;
+
             if (scriptFile.exists()) {
                 formattedCommandLine.append(scriptToDebug);
                 commandLine.removeFirst();
@@ -296,15 +231,7 @@ int main(int argc, char **argv)
             }
 
             if (!scriptFile.exists()) {
-                QFileReader *resourceReader =
-                        new QFileReader(QString(":/error.html"));
-                QString htmlErrorContents = resourceReader->fileContents;
-
-                QString errorMessage = "File not found:<br>" + scriptToDebug;
-                htmlErrorContents.replace("ERROR_MESSAGE", errorMessage);
-
-                mainWindow.viewWidget->setHtml(htmlErrorContents);
-                mainWindow.showMaximized();
+                qDebug() << "File is not found: " << scriptToDebug;
             }
         }
     }

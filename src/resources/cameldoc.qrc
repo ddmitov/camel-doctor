@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>error.html</file>
-        <file>icons/camel.png</file>
+        <file>camel.png</file>
     </qresource>
 </RCC>

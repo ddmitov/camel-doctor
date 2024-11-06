@@ -21,22 +21,10 @@ This is the syntax highlighter of the Perl Debugger GUI inside Perl Executing Br
 https://metacpan.org/release/Syntax-Highlight-Engine-Kate  
 
 ## Qt
-https://gitorious.org/qt-examples/qt-examples/source/sitespecificbrowser (defunct)  
 https://github.com/richmoore/qt-examples/tree/master/sitespecificbrowser  
 
 https://github.com/rsdn/avalon/blob/master/web_view.cpp  
-https://github.com/ariya/phantomjs/blob/master/src/qt/src/3rdparty/webkit/Source/WebKit/qt/Api/qwebpage.cpp  
 
-http://qt-project.org/doc/qt-4.8/qwebhistory.html  
-http://qt-project.org/doc/qt-4.8/qdir.html  
-http://qt-project.org/doc/qt-4.8/qfileinfo.html  
-http://qt-project.org/doc/qt-4.8/qdir.html  
-http://qt-project.org/doc/qt-4.8/qregexp.html  
-http://qt-project.org/doc/qt-4.8/qfile.html  
-http://qt-project.org/doc/qt-4.8/qtextstream.html  
-http://qt-project.org/doc/qt-4.8/qiodevice.html  
-http://qt-project.org/doc/qt-4.8/qwebframe.html  
-http://qt-project.org/doc/qt-5.0/qtwebkit/qwebsettings.html  
 http://qt-project.org/doc/qt-5.0/qtcore/qsettings.html  
 http://qt-project.org/doc/qt-5.0/qtcore/qprocess.html  
 http://qt-project.org/doc/qt-5.0/qtcore/qurl.html  
@@ -44,7 +32,6 @@ http://qt-project.org/doc/qt-5.0/qtcore/qstring.html
 http://qt-project.org/doc/qt-5.0/qtcore/qfile.html  
 http://qt-project.org/doc/qt-5.0/qtwidgets/qapplication.html  
 http://qt-project.org/doc/qt-5.0/qtgui/qguiapplication.html  
-http://qt-project.org/doc/qt-5/qtnetwork-module.html  
 http://qt-project.org/doc/qt-5/qmake-test-function-reference.html  
 
 http://qt-project.org/wiki/Qt_for_beginners_Signals_and_slots_2  
@@ -53,24 +40,12 @@ http://qt-project.org/forums/viewthread/8270 (Find length of QString text)
 http://qt-project.org/forums/viewthread/4433 (Convert QString into QByteArray as either UTF-8 or Latin1)  
 http://qt-project.org/forums/viewthread/25533 (#ifdef condition)  
 
-http://doc.qt.digia.com/qtcreator-extending/coding-style.html  
-
-https://doc.qt.io/archives/4.6/webkit-fancybrowser-mainwindow-cpp.html  
-http://doc.qt.io/qt-4.8/qmake-advanced-usage.html  
-http://doc.qt.io/qt-4.8/signalsandslots.html  
-http://doc.qt.io/qt-4.8/qfileinfo.html  
-http://doc.qt.io/qt-4.8/qwebinspector.html  
-http://doc.qt.io/qt-4.8/qinputdialog.html  
 http://doc.qt.io/qt-5/qtglobal.html  
 http://doc.qt.io/qt-5/qdesktopwidget.html  
 http://doc.qt.io/qt-5/qwebenginecontextmenudata.html  
 http://doc.qt.io/qt-5/qtemporarydir.html  
 
-http://doc.qt.io/archives/qt-5.5/qwebview.html  
-http://doc.qt.io/archives/qt-5.5/qurlquery.html  
-
 https://wiki.qt.io/Qt_Coding_Style  
-https://wiki.qt.io/Open_Web_Page_in_QWebView  
 
 https://forum.qt.io/topic/18879/relative-path-on-qmake-pro-file  
 
@@ -84,10 +59,6 @@ http://www.qtcentre.org/threads/29104-QMake-DEFINES
 
 http://www.qtforum.org/article/18224/get-directory-path.html  
 http://www.qtforum.org/article/15030/passing-parameters-to-the-constructor.html  
-
-http://harmattan-dev.nokia.com/docs/library/html/qt4/qdir.html (defunct)  
-http://harmattan-dev.nokia.com/docs/library/html/qt4/qtglobal.html (defunct)  
-http://harmattan-dev.nokia.com/docs/library/html/qtwebkit/qwebpage.html (defunct)  
 
 http://stackoverflow.com/questions/7402576/how-to-get-current-working-directory-in-a-qt-application  
 http://stackoverflow.com/questions/8026101/correct-way-to-quit-a-qt-program  
@@ -114,11 +85,7 @@ http://www.java2s.com/Code/Cpp/Qt/CheckfileexistanceandfilenamewithQFile.htm
 http://www.stringreplace.com/c-plus-plus/qt-string-replace-method/  
 http://msturm.p7.de/programming_qprocess.php  
 http://cboard.cprogramming.com/linux-programming/101532-detaching-console.html  
-http://doc.crossplatform.ru/qt/4.5.0/deployment-mac.html  
-http://habrahabr.ru/post/150329/ (Qt Coding Style)  
 http://okolovich.info/tag/code-snippets-c/  
-http://www.opensource.apple.com/source/WebKit/WebKit-6531.9/qt/Api/qwebpage.cpp  
-http://lemirep.wordpress.com/2013/06/01/deploying-qt-applications-on-linux-and-windows-3/  
 
 ## Perl 5
 http://perldoc.perl.org/perldebug.html  
@@ -148,7 +115,3 @@ https://github.com/IQAndreas/markdown-licenses
 http://www.zestymeta.com/2013/02/qt-osx-app-bundles-and-you.html  
 http://leonid.shevtsov.me/en/how-to-create-icns-icons-for-os-x  
 http://iconverticons.com/online/  
-
-## Travis CI
-http://stackoverflow.com/questions/25737062/travis-ci-for-a-qt5-project  
-https://forum.qt.io/topic/50340/installing-qt-5-4-dev-packages-in-travis-ci/16  

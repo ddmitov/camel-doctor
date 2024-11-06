@@ -1,5 +1,20 @@
 #!/usr/bin/perl
 
+# Camel Doctor
+
+# This program is free software;
+# you can redistribute it and/or modify it under the terms of the
+# GNU Lesser General Public License,
+# as published by the Free Software Foundation;
+# either version 3 of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY;
+# without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.
+
+# Dimitar D. Mitov, 2014 - 2017, 2024
+# Valcho Nedelchev, 2014 - 2017
+
 use strict;
 use warnings;
 
@@ -13,9 +28,7 @@ use Syntax::Highlight::Engine::Kate;
 # Disable built-in Perl buffering.
 $|=1;
 
-##############################
 # EMBEDDED HTML TEMPLATE:
-##############################
 my $html = "
 <!DOCTYPE html>
 <html>
@@ -30,6 +43,7 @@ my $html = "
         text-align: left;
         font-size: 14px;
       }
+
       ol {
         SOURCE_BOX_HEIGHT
         font-family: monospace;
@@ -37,7 +51,6 @@ my $html = "
         text-indent: 1%;
         color: #000000;
         background-color: #C0C0C0;
-        -webkit-user-select: none;
         list-style-type: decimal;
         padding-left: 6%;
         padding-right: 0%;
@@ -47,12 +60,11 @@ my $html = "
         border-radius: 3px;
         border: transparent 0px;
       }
+
       li {
         background-color: #FFFFFF;
       }
-      div.line {
-        -webkit-user-select: auto;
-      }
+
       div.container {
         padding-top: 4px;
         padding-right: 0px;
@@ -63,9 +75,9 @@ my $html = "
         margin-bottom: 0px;
         margin-left: 4px;
       }
+
       .btn {
         background: #3498db;
-        background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
         background-image: -o-linear-gradient(top, #3498db, #2980b9);
         background-image: linear-gradient(to bottom, #3498db, #2980b9);
         color: #ffffff;
@@ -75,13 +87,14 @@ my $html = "
         border-radius: 3px;
         border: transparent 0px;
       }
+
       .btn:hover {
         background: #3cb0fd;
-        background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
         background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
         background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
         text-decoration: none;
       }
+
       input[type=text] {
         width: 99.5%;
         font-family: sans-serif;
@@ -91,9 +104,11 @@ my $html = "
         border-radius: 3px;
         border: transparent 0px;
       }
+
       input[type=text]:focus {
         outline: none;
       }
+
       div.debugger {
         DEBUGGER_OUTPUT_BOX_HEIGHT
         font-family: monospace;
@@ -120,22 +135,31 @@ DEBUGGER_OUTPUT
     <div class='container'>
       <a href='http://local-pseudodomain/perl-debugger?select-file'
         class='btn' title='Select another file'>File</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=n'
         class='btn' title='Next line'>n</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=r'
         class='btn' title='Return from subroutine'>r</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=c'
         class='btn' title='Continue'>c</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=M'
         class='btn' title='List All Modules'>M</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=S'
         class='btn' title='List All Subroutine Names'>S</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=V'
         class='btn' title='List All Variables'>V</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=X'
         class='btn' title='List Variables in Current Package'>X</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=s'
         class='btn' title='Step Into...'>s</a>
+
       <a href='http://local-pseudodomain/perl-debugger?command=R'
         class='btn' title='Restart debugger'>R</a>
       &nbsp;
@@ -156,10 +180,7 @@ DEBUGGER_OUTPUT
 </html>
 ";
 
-##############################
 # READING PERL DEBUGGER OUTPUT:
-##############################
-
 my $perl_debugger_output = $ENV{'QUERY_STRING'};
 
 my $lineinfo = undef;
@@ -179,12 +200,16 @@ foreach my $debugger_output_line (@debugger_output) {
 
 # Editor support is not available within Camel Doctor:
 $perl_debugger_output =~ s/Editor support available.(\n|(\r\n))//;
+
 # 'man perldebug' is also not available within Camel Doctor:
 $perl_debugger_output =~ s/, or \'man perldebug\' for more help//;
+
 # Remove ASCII escape characters:
 $perl_debugger_output =~ s/\033//g;
+
 # Remove terminal characters:
 $perl_debugger_output =~ s/\[\d{1,2}m//g;
+
 # Replace any tabs with spaces:
 $perl_debugger_output =~ s/\t/ /g;
 
@@ -197,28 +222,29 @@ $perl_debugger_output =~ s/\)\:\s{1,2}\d{1,5}\:/\)\:/;
 # sequence of substitute statements is important here:
 $perl_debugger_output =~ s/\</&lt;/g;
 $perl_debugger_output =~ s/\</&gt;/g;
+
 # Replace three or more newline characters with
 # two newline characters and HTML <br> tags;
 # sequence of substitute statements is important here:
 $perl_debugger_output =~ s/\n{3,}/\n<br>\n<br>/g;
+
 # Replace any still not replaced newline characters with
 # a newline character and an HTML <br> tag.
 $perl_debugger_output =~ s/\n/\n<br>/g;
+
 # Replace two spaces with two HTML whitespace entities:
 $perl_debugger_output =~ s/  /\&nbsp\;\&nbsp\;/g;
 
 my $file_to_highlight = "";
 my $line_to_underline;
-if (defined $lineinfo and
-  $perl_debugger_output !~ "Debugged program terminated") {
+
+if (
+  defined $lineinfo and
+  $perl_debugger_output !~ "Debugged program terminated"
+) {
   chomp $lineinfo;
   $lineinfo =~ s/^.*[\(\[]//g;
   $lineinfo =~ s/[\)\]].*//g;
-
-  # Split-based solution is good for Unix-like systems,
-  # but what about Windows machines, where filepaths are like
-  # "C:\Perl\lib" or something like that?
-  #my ($file_to_highlight, $line_to_underline) = split /:/, $lineinfo;
 
   $file_to_highlight = $lineinfo;
   $line_to_underline = $lineinfo;
@@ -248,25 +274,31 @@ if (defined $lineinfo and
   my $end_line = $line_to_underline + 10;
 
   my $line_number;
+
   foreach my $source_to_highlight_line (@source_to_highlight_lines) {
     $line_number++;
 
     if ($line_number >= $start_line and $line_number <= $end_line) {
       my $source_code_language = "Perl";
+
       my $source_code_highlighter =
         source_code_highlighter($source_code_language);
+
       my $highlighted_line =
         $source_code_highlighter->highlightText ($source_to_highlight_line);
 
       my $formatted_perl_source_line;
+
       if ($line_number eq $line_to_underline) {
         $formatted_perl_source_line =
           "<li style='background-color: #CCCCCC;' value='${line_number}'><div class='line'>${highlighted_line}</div></li>\n";
+
         $formatted_perl_source_code =
           $formatted_perl_source_code.$formatted_perl_source_line;
       } else {
         $formatted_perl_source_line =
           "<li value='${line_number}'></a><div class='line'>${highlighted_line}</div></li>\n";
+
         $formatted_perl_source_code =
           $formatted_perl_source_code.$formatted_perl_source_line;
       }
@@ -274,9 +306,7 @@ if (defined $lineinfo and
   }
 }
 
-##############################
 # TEMPLATE MANIPULATION:
-##############################
 my $source_box_height;
 my $debugger_output_box_height;
 
@@ -301,44 +331,43 @@ $html =~ s/COMMAND_PROMPT/$command_prompt/;
 
 print $html;
 
-##############################
-# SYNTAX HIGHLIGHTING SETTINGS SUBROUTINE:
-##############################
+# SYNTAX HIGHLIGHTING SETTINGS:
 sub source_code_highlighter {
   # Syntax::Highlight::Engine::Kate settings:
   my ($source_code_language) = @_;
   my $source_code_highlighter = new Syntax::Highlight::Engine::Kate(
-  language =>  $source_code_language,
-    substitutions => {
-    "<" => "&lt;",
-    ">" => "&gt;",
-    "&" => "&amp;",
-    " " => "&nbsp;",
-    "\t" => "&nbsp;&nbsp;&nbsp;",
-    "\n" => "",
-  },
-  format_table => {
-    Alert => ["<font color='#0000ff'>", "</font>"],
-    BaseN => ["<font color='#007f00'>", "</font>"],
-    BString => ["<font color='#c9a7ff'>", "</font>"],
-    Char => ["<font color='#ff00ff'>", "</font>"],
-    Comment => ["<font color='#7f7f7f'><i>", "</i></font>"],
-    DataType => ["<font color='#0000ff'>", "</font>"],
-    DecVal => ["<font color='#00007f'>", "</font>"],
-    Error => ["<font color='#ff0000'><b><i>", "</i></b></font>"],
-    Float => ["<font color='#00007f'>", "</font>"],
-    Function => ["<font color='#007f00'>", "</font>"],
-    IString => ["<font color='#ff0000'>", ""],
-    Keyword => ["<b>", "</b>"],
-    Normal => ["", ""],
-    Operator => ["<font color='#ffa500'>", "</font>"],
-    Others => ["<font color='#b03060'>", "</font>"],
-    RegionMarker => ["<font color='#96b9ff'><i>", "</i></font>"],
-    Reserved => ["<font color='#9b30ff'><b>", "</b></font>"],
-    String => ["<font color='#ff0000'>", "</font>"],
-    Variable => ["<font color='#0000ff'><b>", "</b></font>"],
-    Warning => ["<font color='#0000ff'><b><i>", "</b></i></font>"],
+    language =>  $source_code_language,
+      substitutions => {
+      "<" => "&lt;",
+      ">" => "&gt;",
+      "&" => "&amp;",
+      " " => "&nbsp;",
+      "\t" => "&nbsp;&nbsp;&nbsp;",
+      "\n" => "",
     },
+    format_table => {
+      Alert => ["<font color='#0000ff'>", "</font>"],
+      BaseN => ["<font color='#007f00'>", "</font>"],
+      BString => ["<font color='#c9a7ff'>", "</font>"],
+      Char => ["<font color='#ff00ff'>", "</font>"],
+      Comment => ["<font color='#7f7f7f'><i>", "</i></font>"],
+      DataType => ["<font color='#0000ff'>", "</font>"],
+      DecVal => ["<font color='#00007f'>", "</font>"],
+      Error => ["<font color='#ff0000'><b><i>", "</i></b></font>"],
+      Float => ["<font color='#00007f'>", "</font>"],
+      Function => ["<font color='#007f00'>", "</font>"],
+      IString => ["<font color='#ff0000'>", ""],
+      Keyword => ["<b>", "</b>"],
+      Normal => ["", ""],
+      Operator => ["<font color='#ffa500'>", "</font>"],
+      Others => ["<font color='#b03060'>", "</font>"],
+      RegionMarker => ["<font color='#96b9ff'><i>", "</i></font>"],
+      Reserved => ["<font color='#9b30ff'><b>", "</b></font>"],
+      String => ["<font color='#ff0000'>", "</font>"],
+      Variable => ["<font color='#0000ff'><b>", "</b></font>"],
+      Warning => ["<font color='#0000ff'><b><i>", "</b></i></font>"],
+      }
    );
+
   return $source_code_highlighter;
 }

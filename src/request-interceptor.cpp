@@ -27,11 +27,8 @@ WebUrlRequestInterceptor::WebUrlRequestInterceptor(QObject *page)
     // No need to implement code here, but must be declared!
 }
 
-void WebUrlRequestInterceptor::interceptRequest(
-        QWebEngineUrlRequestInfo &info) {
-    if (info.resourceType() == QWebEngineUrlRequestInfo::ResourceTypeMainFrame
-        and info.requestUrl().fileName() == "perl-debugger"
-    ) {
+void WebUrlRequestInterceptor::interceptRequest(QWebEngineUrlRequestInfo &info) {
+    if (info.requestUrl().fileName() == "perl-debugger") {
         emit sendCommandToDebuggerSignal(info.requestUrl());
     }
 }

@@ -1,10 +1,10 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
 
-my $value = 1;
-print ++$value, $/;
+my $value = 0;
+
 print ++$value, $/;
 print ++$value, $/;
 print ++$value, $/;

@@ -21,6 +21,7 @@ https://github.com/ddmitov/camel-doctor
 
 #include <qglobal.h>
 #include <QApplication>
+#include <QMessageBox>
 #include <QTextCodec>
 
 #include "main-window.h"
@@ -49,8 +50,7 @@ int main(int argc, char **argv)
     QStringList commandLine = QApplication::arguments();
 
     // cameldoc --help
-    if (commandLine.size() == 2 and
-            commandLine.at(1).contains("--help")) {
+    if (commandLine.size() == 2 and commandLine.at(1).contains("--help")) {
         std::cout << " " << std::endl;
         std::cout << qApp->applicationName().toLatin1().constData()
                   << " version "
@@ -67,6 +67,7 @@ int main(int argc, char **argv)
         std::cout << "cameldoc --help"
                   << std::endl;
         std::cout << " " << std::endl;
+
         return 0;
     }
 
@@ -77,6 +78,7 @@ int main(int argc, char **argv)
     if (isatty(fileno(stdin))) {
         // Fork another instance of the browser:
         int pid = fork();
+
         if (pid < 0) {
             return 1;
         }
@@ -90,19 +92,17 @@ int main(int argc, char **argv)
             // Enter a new session:
             setsid();
 
-            // Original command-line arguments are
-            // transmitted to the detached copy of Camel Doctor.
-            // The first command-line argument is
-            // the Camel Doctor binary file path and it is removed.
-            // This is necessary for the QProcess invocation.
+            // The command-line arguments are transmitted
+            // to the detached copy of Camel Doctor,
+            // but the first of them is
+            // the Camel Doctor application file path and it is removed.
             commandLine.removeFirst();
 
             // New instance is now detached from terminal:
             QProcess anotherInstance;
 
             anotherInstance.startDetached(
-                QApplication::applicationFilePath()
-                .toLatin1().constData(),
+                QApplication::applicationFilePath().toLatin1().constData(),
                 commandLine
             );
 
@@ -115,33 +115,27 @@ int main(int argc, char **argv)
         }
     }
 
-    // Binary file directory:
-    QDir binaryDir = QDir::toNativeSeparators(application.applicationDirPath());
+    // Application file directory:
+    QDir applicationDir = QDir::toNativeSeparators(
+        application.applicationDirPath()
+    );
 
-#ifdef Q_OS_MAC
-    if (BUNDLE == 1) {
-        binaryDir.cdUp();
-        binaryDir.cdUp();
-    }
-#endif
-
-    QString binaryDirName = binaryDir.absolutePath().toLatin1();
+    QString applicationDirName = applicationDir.absolutePath().toLatin1();
 
     // Resources directory:
     QString resourcesDirectory =
-    QDir::toNativeSeparators(binaryDirName + "/resources");
+    QDir::toNativeSeparators(applicationDirName + "/resources");
 
     application.setProperty("resourcesDirectory", resourcesDirectory);
 
     // Formatter script:
-    // Formatter script is read only once at application startup,
+    // The formatter script is read only once at application startup,
     // than it is stored as an application property in memory and
-    // is run as an one-liner when needed to decrease execution time:
+    // is run as an one-liner to decrease execution time:
     QString debuggerFormatterPath =
         QDir::toNativeSeparators(resourcesDirectory + "/dbgformatter.pl");
 
     QFile debuggerFormatterFile(debuggerFormatterPath);
-    bool debuggerFormatterExists = false;
 
     if (debuggerFormatterFile.exists()) {
         QFileReader *formatterScriptReader =
@@ -150,10 +144,14 @@ int main(int argc, char **argv)
         QString formatterScriptContents = formatterScriptReader->fileContents;
 
         application.setProperty("formatterScript", formatterScriptContents);
-        debuggerFormatterExists = true;
     } else {
-        qDebug() << "Perl debugger formatter is missing.";
-        qDebug() << debuggerFormatterPath + "is not found.";
+        QMessageBox msgBox;
+
+        msgBox.setWindowTitle("Camel Doctor");
+        msgBox.setText("File not found: " + debuggerFormatterPath);
+        msgBox.exec();
+
+        return 0;
     }
 
     // Main window initialization:
@@ -163,76 +161,80 @@ int main(int argc, char **argv)
 
     QString scriptToDebug;
 
-    if (debuggerFormatterExists == true) {
-        // Perl debugger handler initialization:
-        QPerlDebuggerHandler *debuggerHandler = new QPerlDebuggerHandler();
+    // Perl debugger handler initialization:
+    QPerlDebuggerHandler *debuggerHandler = new QPerlDebuggerHandler();
 
-        QObject::connect(
-            mainPage,
-            SIGNAL(sendCommandToDebuggerSignal(QUrl)),
-            debuggerHandler,
-            SLOT(qSendCommandToDebuggerSlot(QUrl))
-        );
+    QObject::connect(
+        mainPage,
+        SIGNAL(sendCommandToDebuggerSignal(QUrl)),
+        debuggerHandler,
+        SLOT(qSendCommandToDebuggerSlot(QUrl))
+    );
 
-        QObject::connect(
-            debuggerHandler,
-            SIGNAL(qDisplayOutputSignal(QString)),
-            &mainWindow,
-            SLOT(qDisplayOutputSlot(QString))
-        );
+    QObject::connect(
+        debuggerHandler,
+        SIGNAL(qDisplayOutputSignal(QString)),
+        &mainWindow,
+        SLOT(qDisplayOutputSlot(QString))
+    );
 
-        if (commandLine.size() == 1) {
-            QFileSelector *fileSelector = new QFileSelector();
-            scriptToDebug = fileSelector->filePath;
+    if (commandLine.size() == 1) {
+        QFileSelector *fileSelector = new QFileSelector();
+        scriptToDebug = fileSelector->filePath;
 
-            if (scriptToDebug.length() > 1) {
-                QStringList commandLine;
-                commandLine.append(scriptToDebug);
-                debuggerHandler->qStartDebuggerSlot(commandLine);
-            }
-
-            if (scriptToDebug.length() <= 1) {
-                return 0;
-            }
+        if (scriptToDebug.length() > 1) {
+            QStringList commandLine;
+            commandLine.append(scriptToDebug);
+            debuggerHandler->qStartDebuggerSlot(commandLine);
         }
 
-        if (commandLine.size() > 1) {
-            // The first command-line argument is
-            // the Camel Doctor binary file path and it is removed.
+        if (scriptToDebug.length() <= 1) {
+            return 0;
+        }
+    }
+
+    if (commandLine.size() > 1) {
+        // The first command-line argument is
+        // the Camel Doctor application file path and it is removed.
+        commandLine.removeFirst();
+
+        scriptToDebug = commandLine.first();
+
+        // Remove terminal characters:
+        scriptToDebug.replace(QRegExp("\\[\\d{1,2}m"), "");
+        // Remove ASCII escape characters:
+        scriptToDebug.replace(QRegExp("\\033"), "");
+
+        QDir scriptPath(scriptToDebug);
+
+        if (!scriptPath.isAbsolute()) {
+            scriptToDebug = QDir::toNativeSeparators(
+                QDir::currentPath() +
+                QDir::separator() +
+                scriptToDebug
+            );
+        }
+
+        QFile scriptFile(scriptToDebug);
+        QStringList formattedCommandLine;
+
+        if (scriptFile.exists()) {
+            formattedCommandLine.append(scriptToDebug);
             commandLine.removeFirst();
 
-            scriptToDebug = commandLine.first();
+            formattedCommandLine.append(commandLine);
 
-            // Remove terminal characters:
-            scriptToDebug.replace(QRegExp("\\[\\d{1,2}m"), "");
-            // Remove ASCII escape characters:
-            scriptToDebug.replace(QRegExp("\\033"), "");
+            debuggerHandler->qStartDebuggerSlot(formattedCommandLine);
+        }
 
-            QDir scriptPath(scriptToDebug);
+        if (!scriptFile.exists()) {
+            QMessageBox msgBox;
 
-            if (!scriptPath.isAbsolute()) {
-                scriptToDebug = QDir::toNativeSeparators(
-                    QDir::currentPath() +
-                    QDir::separator() +
-                    scriptToDebug
-                );
-            }
+            msgBox.setWindowTitle("Camel Doctor");
+            msgBox.setText("File not found: " + scriptToDebug);
+            msgBox.exec();
 
-            QFile scriptFile(scriptToDebug);
-            QStringList formattedCommandLine;
-
-            if (scriptFile.exists()) {
-                formattedCommandLine.append(scriptToDebug);
-                commandLine.removeFirst();
-
-                formattedCommandLine.append(commandLine);
-
-                debuggerHandler->qStartDebuggerSlot(formattedCommandLine);
-            }
-
-            if (!scriptFile.exists()) {
-                qDebug() << "File is not found: " << scriptToDebug;
-            }
+            return 0;
         }
     }
 

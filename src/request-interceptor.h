@@ -26,11 +26,13 @@ class WebUrlRequestInterceptor : public QWebEngineUrlRequestInterceptor
     Q_OBJECT
 
 signals:
+
     void startDebuggerSignal();
 
     void sendCommandToDebuggerSignal(QUrl url);
 
 public:
+
     WebUrlRequestInterceptor(QObject *page = Q_NULLPTR);
 
     QPerlDebuggerHandler *debuggerHandler;

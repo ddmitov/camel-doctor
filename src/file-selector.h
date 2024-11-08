@@ -27,6 +27,7 @@ class QFileSelector : public QObject
     Q_OBJECT
 
 public:
+
     explicit QFileSelector();
 
     QString filePath;

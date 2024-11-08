@@ -27,6 +27,7 @@ class QFileReader : public QObject
     Q_OBJECT
 
 public:
+
     explicit QFileReader(QString filePath);
 
     QString fileContents;

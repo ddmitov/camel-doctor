@@ -30,9 +30,11 @@ class QFormatterHandler : public QObject
     Q_OBJECT
 
 signals:
+
     void qDisplayOutputSignal(QString output);
 
 public slots:
+
     void qFormatterOutputSlot()
     {
         QString output = formatterProcess.readAllStandardOutput();
@@ -48,9 +50,11 @@ public slots:
     }
 
 public:
+
     QFormatterHandler(QByteArray debuggerData);
 
 private:
+
     QProcess formatterProcess;
 
     QString formatterAccumulatedOutput;

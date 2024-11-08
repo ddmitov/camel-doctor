@@ -27,6 +27,8 @@ QFileSelector::QFileSelector()
 {
     QFileDialog selectScriptToDebugDialog(qApp->activeWindow());
 
+    selectScriptToDebugDialog.setParent(qApp->activeWindow());
+    selectScriptToDebugDialog.setOption(QFileDialog::DontUseNativeDialog);
     selectScriptToDebugDialog.setFileMode(QFileDialog::ExistingFile);
     selectScriptToDebugDialog.setViewMode(QFileDialog::Detail);
     selectScriptToDebugDialog.setWindowModality(Qt::WindowModal);
@@ -40,4 +42,5 @@ QFileSelector::QFileSelector()
         );
 
     selectScriptToDebugDialog.close();
+    selectScriptToDebugDialog.deleteLater();
 }

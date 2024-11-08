@@ -1,14 +1,15 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
 use Cwd;
+use English qw( -no_match_vars );
 
-print "Perl $^V\n";
+print "\nPerl $PERL_VERSION\n";
 
 my $cwd = cwd();
-print "Working Directory: $cwd\n";
+print "\nWorking Directory: $cwd\n";
 
-print "\@INC Array:\n";
-
+print "\n\@INC Array:\n";
 print join "\n", @INC;
+print "\n\n";

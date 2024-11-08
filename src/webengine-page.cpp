@@ -44,7 +44,7 @@ QPage::QPage()
         setAttribute(QWebEngineSettings::ErrorPageEnabled, false);
 
     QWebEngineSettings::globalSettings()->
-            setAttribute(QWebEngineSettings::JavascriptEnabled, false);
+        setAttribute(QWebEngineSettings::JavascriptEnabled, false);
 
     QWebEngineSettings::globalSettings()->
         setAttribute(
@@ -52,5 +52,5 @@ QPage::QPage()
         );
 
     QWebEngineSettings::globalSettings()->
-            setAttribute(QWebEngineSettings::PluginsEnabled, false);
+        setAttribute(QWebEngineSettings::PluginsEnabled, false);
 }

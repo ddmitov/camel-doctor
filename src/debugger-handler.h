@@ -36,9 +36,11 @@ class QPerlDebuggerHandler : public QObject
     Q_OBJECT
 
 signals:
+
     void qDisplayOutputSignal(QString output);
 
 public slots:
+
     void qSelectFileToDebugSlot()
     {
         QFileSelector *fileSelector = new QFileSelector();
@@ -88,11 +90,6 @@ public slots:
 
         debuggerCommand.replace("+", " ");
 
-        // Quit Camel Doctor and the Perl debugger:
-        if (debuggerCommand == "q") {
-            qApp->exit();
-        }
-
         if (debuggerHandler.isOpen()) {
             if (debuggerCommand.length() > 0) {
                 QByteArray debuggerCommandArray;
@@ -140,11 +137,13 @@ public slots:
     }
 
 private:
+
     QProcess debuggerHandler;
 
     QString debuggerAccumulatedOutput;
 
 public:
+
     QPerlDebuggerHandler();
 };
 

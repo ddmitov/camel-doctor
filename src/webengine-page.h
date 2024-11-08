@@ -31,15 +31,18 @@ class QPage : public QWebEnginePage
     Q_OBJECT
 
 signals:
+
     void sendCommandToDebuggerSignal(QUrl url);
 
 public slots:
+
     void qSendCommandToDebuggerSlot(QUrl url)
     {
         emit sendCommandToDebuggerSignal(url);
     }
 
 public:
+
     QPage();
 
     WebUrlRequestInterceptor *requestInterceptor;

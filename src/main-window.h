@@ -30,13 +30,21 @@ class QMainBrowserWindow : public QMainWindow
     Q_OBJECT
 
 public slots:
+
     void qDisplayOutputSlot(QString output)
     {
         viewWidget->setHtml(output);
         showMaximized();
     }
 
+    void closeEvent(QCloseEvent *event)
+    {
+        this->viewWidget->page()->deleteLater();
+        event->accept();
+    }
+
 public:
+
     explicit QMainBrowserWindow(QWidget *parent = 0);
 
     QViewWidget *viewWidget;

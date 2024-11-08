@@ -31,11 +31,13 @@ class QViewWidget : public QWebEngineView
     Q_OBJECT
 
 signals:
+
     void initiateWindowClosingSignal();
 
 public slots:
-        // Context menu:
-        void contextMenuEvent(QContextMenuEvent *event)
+
+    // Context menu:
+    void contextMenuEvent(QContextMenuEvent *event)
     {
         QWebEngineContextMenuData contextMenuTest =
             QWebEngineView::page()->contextMenuData();
@@ -122,6 +124,7 @@ public slots:
     }
 
 public:
+
     QViewWidget();
 };
 

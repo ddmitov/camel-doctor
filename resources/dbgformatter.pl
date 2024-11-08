@@ -41,7 +41,7 @@ my $html = "
       body {
         background-color: #222222;
         text-align: left;
-        font-size: 14px;
+        font-size: 18px;
       }
 
       ol {
@@ -162,10 +162,6 @@ DEBUGGER_OUTPUT
 
       <a href='http://local-pseudodomain/perl-debugger?command=R'
         class='btn' title='Restart debugger'>R</a>
-      &nbsp;
-      <a style='color: #ffffff; font-family: sans-serif;'>
-        COMMAND_PROMPT
-      </a>
     </div>
 
     <div class='container'>
@@ -184,16 +180,15 @@ DEBUGGER_OUTPUT
 my $perl_debugger_output = $ENV{'QUERY_STRING'};
 
 my $lineinfo = undef;
-my $command_prompt;
 
 my @debugger_output = split /\n/, $perl_debugger_output;
+
 foreach my $debugger_output_line (@debugger_output) {
   if ($debugger_output_line =~ m/[\(\[].*\:\d{1,5}[\)\]]/) {
     $lineinfo = $debugger_output_line;
   }
+
   if ($debugger_output_line =~ m/\s{1,}DB\<\d{1,}\>\s/) {
-    $command_prompt = $debugger_output_line;
-    chomp $command_prompt;
     $perl_debugger_output =~ s/\s{1,}DB\<\d{1,}\>\s//;
   }
 }
@@ -234,6 +229,11 @@ $perl_debugger_output =~ s/\n/\n<br>/g;
 
 # Replace two spaces with two HTML whitespace entities:
 $perl_debugger_output =~ s/  /\&nbsp\;\&nbsp\;/g;
+
+# Modify the 'Use q to quit or R to restart' group of messages:
+$perl_debugger_output =~ s/Use q to quit or R to restart.*/Use R to restart./;
+$perl_debugger_output =~ s/.*to get additional info.//;
+$perl_debugger_output =~ s/\,$/./;
 
 my $file_to_highlight = "";
 my $line_to_underline;
@@ -327,45 +327,44 @@ if (defined $lineinfo or
   $html =~ s/HIGHLIGHTED_SOURCE//;
 }
 
-$html =~ s/COMMAND_PROMPT/$command_prompt/;
-
 print $html;
 
 # SYNTAX HIGHLIGHTING SETTINGS:
 sub source_code_highlighter {
   # Syntax::Highlight::Engine::Kate settings:
   my ($source_code_language) = @_;
+
   my $source_code_highlighter = new Syntax::Highlight::Engine::Kate(
     language =>  $source_code_language,
       substitutions => {
-      "<" => "&lt;",
-      ">" => "&gt;",
-      "&" => "&amp;",
-      " " => "&nbsp;",
+      "<"  => "&lt;",
+      ">"  => "&gt;",
+      "&"  => "&amp;",
+      " "  => "&nbsp;",
       "\t" => "&nbsp;&nbsp;&nbsp;",
       "\n" => "",
     },
     format_table => {
-      Alert => ["<font color='#0000ff'>", "</font>"],
-      BaseN => ["<font color='#007f00'>", "</font>"],
-      BString => ["<font color='#c9a7ff'>", "</font>"],
-      Char => ["<font color='#ff00ff'>", "</font>"],
-      Comment => ["<font color='#7f7f7f'><i>", "</i></font>"],
-      DataType => ["<font color='#0000ff'>", "</font>"],
-      DecVal => ["<font color='#00007f'>", "</font>"],
-      Error => ["<font color='#ff0000'><b><i>", "</i></b></font>"],
-      Float => ["<font color='#00007f'>", "</font>"],
-      Function => ["<font color='#007f00'>", "</font>"],
-      IString => ["<font color='#ff0000'>", ""],
-      Keyword => ["<b>", "</b>"],
-      Normal => ["", ""],
-      Operator => ["<font color='#ffa500'>", "</font>"],
-      Others => ["<font color='#b03060'>", "</font>"],
-      RegionMarker => ["<font color='#96b9ff'><i>", "</i></font>"],
-      Reserved => ["<font color='#9b30ff'><b>", "</b></font>"],
-      String => ["<font color='#ff0000'>", "</font>"],
-      Variable => ["<font color='#0000ff'><b>", "</b></font>"],
-      Warning => ["<font color='#0000ff'><b><i>", "</b></i></font>"],
+      Alert        => ["<font color='#0000ff'>",       "</font>"        ],
+      BaseN        => ["<font color='#007f00'>",       "</font>"        ],
+      BString      => ["<font color='#c9a7ff'>",       "</font>"        ],
+      Char         => ["<font color='#ff00ff'>",       "</font>"        ],
+      Comment      => ["<font color='#7f7f7f'><i>",    "</i></font>"    ],
+      DataType     => ["<font color='#0000ff'>",       "</font>"        ],
+      DecVal       => ["<font color='#00007f'>",       "</font>"        ],
+      Error        => ["<font color='#ff0000'><b><i>", "</i></b></font>"],
+      Float        => ["<font color='#00007f'>",       "</font>"        ],
+      Function     => ["<font color='#007f00'>",       "</font>"        ],
+      IString      => ["<font color='#ff0000'>",       ""               ],
+      Keyword      => ["<b>",                          "</b>"           ],
+      Normal       => ["",                             ""               ],
+      Others       => ["<font color='#b03060'>",       "</font>"        ],
+      Operator     => ["<font color='#ffa500'>",       "</font>"        ],
+      RegionMarker => ["<font color='#96b9ff'><i>",    "</i></font>"    ],
+      Reserved     => ["<font color='#9b30ff'><b>",    "</b></font>"    ],
+      String       => ["<font color='#ff0000'>",       "</font>"        ],
+      Variable     => ["<font color='#0000ff'><b>",    "</b></font>"    ],
+      Warning      => ["<font color='#0000ff'><b><i>", "</b></i></font>"],
       }
    );
 

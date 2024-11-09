@@ -51,16 +51,16 @@ When Camel Doctor is started by double-clicking the binary, a file selection dia
 
 ## Resources Directory
 
-``{camel_doctor_application_directory}/resources`` is the home of all Camel Doctor support files, including the [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) module. This directory and all files inside it must not be removed or renamed for the proper operation of Camel Doctor.
+``{camel_doctor_application_directory}/resources`` is the home of all Camel Doctor support files, including the [Syntax::Highlight::Engine::Kate](https://metacpan.org/release/Syntax-Highlight-Engine-Kate) module. This directory and all its files must not be removed or renamed for the proper operation of Camel Doctor.
 
 
 ## Developer Notes
 
-Camel Doctor handles Perl debugger output using the ``dbgformatter.pl`` script located in the resources directory.  
-If the ``dbgformatter.pl`` script does not exist, an error message is displayed.  
-This script can be modified without recompilation of the Camel Doctor binary provided that the following conditions are met:
+Camel Doctor handles Perl debugger output using the ``dbgformatter.pl`` script located in the resources directory. If the ``dbgformatter.pl`` script does not exist, an error message is displayed.  
 
-1. ``dbgformatter.pl`` is not renamed.
+``dbgformatter.pl`` can be modified without recompilation of the Camel Doctor binary provided that the following conditions are met:
+
+1. The file name is not changed.
 
 2. Perl debugger output is read from query string.
 
@@ -68,13 +68,11 @@ This script can be modified without recompilation of the Camel Doctor binary pro
   * **Select file to debug:** ``http://local-pseudodomain/perl-debugger?select-file``
   * **Send debugger command:** ``http://local-pseudodomain/perl-debugger?command=M``
 
-The working directory of ``dbgformatter.pl`` is the resources directory.  
-
-``dbgformatter.pl`` is read only once at application startup, than it is stored in memory and is run as an one-liner to decrease execution time.  
+The working directory of ``dbgformatter.pl`` is the resources directory.
 
 ## History
 
-Camel Doctor was started as a part of [Perl Executing Browser](https://www.github.com/ddmitov/perl-executing-browser) in 2014.  
+Camel Doctor was started as a part of the [Perl Executing Browser](https://www.github.com/ddmitov/perl-executing-browser) in 2014.  
 
 ## License
 

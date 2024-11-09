@@ -41,22 +41,19 @@ QFormatterHandler::QFormatterHandler(QByteArray debuggerData)
 
     QProcessEnvironment formatterEnvironment =
         QProcessEnvironment::systemEnvironment();
-
     formatterEnvironment.insert("QUERY_STRING", debuggerData);
-
     formatterProcess.setProcessEnvironment(formatterEnvironment);
+
     formatterProcess.setWorkingDirectory(
         qApp->property("resourcesDirectory").toString()
     );
 
-    // Formatter script is read only once at application startup,
-    // than it is stored as an application property in memory and
-    // is executed as an one-liner for speed:
+    QString formatterScriptPath =
+        qApp->property("resourcesDirectory").toString() + "/dbgformatter.pl";
+
     formatterProcess.start(
         QString("perl"),
-        QStringList()
-        << "-e"
-        << qApp->property("formatterScript").toString(),
+        QStringList() << formatterScriptPath,
         QProcess::Unbuffered | QProcess::ReadWrite
     );
 }

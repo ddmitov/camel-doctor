@@ -37,7 +37,6 @@ unix {
             # Header files:
             HEADERS +=                \
                 debugger-handler.h    \
-                file-reader.h         \
                 file-selector.h       \
                 formatter-handler.h   \
                 main-window.h         \
@@ -48,7 +47,6 @@ unix {
             # Source files:
             SOURCES += \
                 debugger-handler.cpp    \
-                file-reader.cpp         \
                 file-selector.cpp       \
                 formatter-handler.cpp   \
                 main.cpp                \

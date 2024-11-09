@@ -129,22 +129,12 @@ int main(int argc, char **argv)
     application.setProperty("resourcesDirectory", resourcesDirectory);
 
     // Formatter script:
-    // The formatter script is read only once at application startup,
-    // than it is stored as an application property in memory and
-    // is run as an one-liner to decrease execution time:
     QString debuggerFormatterPath =
         QDir::toNativeSeparators(resourcesDirectory + "/dbgformatter.pl");
 
     QFile debuggerFormatterFile(debuggerFormatterPath);
 
-    if (debuggerFormatterFile.exists()) {
-        QFileReader *formatterScriptReader =
-            new QFileReader(debuggerFormatterPath);
-
-        QString formatterScriptContents = formatterScriptReader->fileContents;
-
-        application.setProperty("formatterScript", formatterScriptContents);
-    } else {
+    if (!debuggerFormatterFile.exists()) {
         QMessageBox msgBox;
 
         msgBox.setWindowTitle("Camel Doctor");

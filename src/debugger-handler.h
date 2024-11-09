@@ -27,7 +27,6 @@ https://github.com/ddmitov/camel-doctor
 #include <QUrlQuery>
 
 #include <formatter-handler.h>
-#include <file-reader.h>
 #include <file-selector.h>
 
 

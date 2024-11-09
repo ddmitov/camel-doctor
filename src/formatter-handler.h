@@ -22,8 +22,6 @@ https://github.com/ddmitov/camel-doctor
 #include <QApplication>
 #include <QProcess>
 
-#include <file-reader.h>
-
 
 class QFormatterHandler : public QObject
 {

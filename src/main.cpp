@@ -124,7 +124,7 @@ int main(int argc, char **argv)
 
     // Resources directory:
     QString resourcesDirectory =
-    QDir::toNativeSeparators(applicationDirName + "/resources");
+        QDir::toNativeSeparators(applicationDirName + "/resources");
 
     application.setProperty("resourcesDirectory", resourcesDirectory);
 

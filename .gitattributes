@@ -1,1 +1,1 @@
-resources/lib/*.pm linguist-vendored
+resources/lib/* linguist-vendored

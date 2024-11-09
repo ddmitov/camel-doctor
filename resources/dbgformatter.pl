@@ -232,6 +232,7 @@ $perl_debugger_output =~ s/  /\&nbsp\;\&nbsp\;/g;
 
 # Modify the 'Use q to quit or R to restart' group of messages:
 $perl_debugger_output =~ s/Use q to quit or R to restart.*/Use R to restart./;
+$perl_debugger_output =~ s/Use 'q' to quit or 'R' to restart.*/Use R to restart./;
 $perl_debugger_output =~ s/.*to get additional info.//;
 $perl_debugger_output =~ s/\,$/./;
 
@@ -256,8 +257,7 @@ if (
 # SYNTAX HIGHLIGHTING:
 ##############################
 my $formatted_perl_source_code = "";
-if (defined $lineinfo and
-  $perl_debugger_output !~ "Debugged program terminated") {
+if (defined $lineinfo and $perl_debugger_output !~ "Debugged program terminated") {
   # Open the file to highlight read-only:
   my $file_to_highlight_filehandle;
   open ($file_to_highlight_filehandle, "<", "$file_to_highlight");
